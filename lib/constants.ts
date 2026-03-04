@@ -47,8 +47,9 @@ export const PROMO_CODES: Record<string, { discount: number; type: "percent" | "
 }
 
 export const SOCIAL_LINKS = [
-  { name: "Instagram", href: "#" },
-  { name: "Facebook", href: "#" },
-  { name: "Twitter", href: "#" },
-  { name: "TripAdvisor", href: "#" },
+  { name: "Instagram", href: "https://www.instagram.com/" },
+  { name: "Facebook", href: "https://web.facebook.com"},
+  { name: "Twitter", href: "https://x.com" },
+  { name: "TripAdvisor", href: "https://www.tripadvisor.com"},
+  { name: "Tiktok", href: "https://www.tiktok.com" },
 ] as const
