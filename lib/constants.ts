@@ -3,7 +3,7 @@ export const HOTEL_TAGLINE = "Where Timeless Elegance Meets Modern Luxury"
 export const HOTEL_DESCRIPTION =
   "Nestled in the heart of the city, The Kerawi offers an unparalleled three-star experience. Every detail has been meticulously crafted to ensure your stay is nothing short of extraordinary."
 export const HOTEL_ADDRESS = " Roughly 2.2 miles (approx. 39-minute drive) from Hawassa Airport."
-export const HOTEL_PHONE = "+251 462-124-776,+251 955-45-60-60,+251 935-35-35-72,+251 95481-82-90,+251 935 -35-35-84"
+export const HOTEL_PHONE = "+251 462-124-776,+251 955-45-60-60"
 export const HOTEL_EMAIL = "Kerawihotel@gmail.com"
 export const HOTEL_STAR_RATING = 3
 export const HOTEL_CHECK_IN_TIME = "15:00"
