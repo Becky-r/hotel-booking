@@ -32,10 +32,10 @@ export const rooms: Room[] = [
     size: 350,
     floor: "3rd - 5th",
     view: "City View",
-    basePrice: 299,
+    basePrice: 22,
     
     images: [
-      "images/5N5A0225.JPG",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
       "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
     ],
@@ -50,22 +50,22 @@ export const rooms: Room[] = [
       "Daily Housekeeping",
     ],
     featured: false,
-    roomNumbers: ["301", "302", "401", "402", "501", "502"],
+    roomNumbers: ["301", "302", "401", "402", "501", "502","786","454","422", "452", "123", "978", "345", "562","978","345"],
   },
   {
     id: "2",
-    slug: "superior-room",
-    name: "Superior Room",
+    slug: "deluxe-room",
+    name: "Deluxe Room",
     shortDescription: "Generous space and premium appointments for an elevated experience.",
     description:
-      "Step into our Superior Room and discover a spacious haven of refined luxury. Featuring a king-size bed dressed in Egyptian cotton, a separate seating area, and a bathroom with both rain shower and soaking tub. The room's warm palette and bespoke furniture create an atmosphere of quiet sophistication that makes every stay memorable.",
+      "Step into our Deluxe Room and discover a spacious haven of refined luxury. Featuring a king-size bed dressed in Egyptian cotton, a separate seating area, and a bathroom with both rain shower and soaking tub. The room's warm palette and bespoke furniture create an atmosphere of quiet sophistication that makes every stay memorable.",
     bedType: "King",
     maxAdults: 2,
     maxChildren: 2,
     size: 450,
     floor: "5th - 8th",
     view: "Garden View",
-    basePrice: 429,
+    basePrice: 25,
     
     images: [
       "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80",
@@ -75,7 +75,7 @@ export const rooms: Room[] = [
     amenities: [
       "Free Wi-Fi",
       "Air Conditioning",
-      "Mini Bar",
+      "Private Balcony",
       "Flat-screen TV",
       "Rain Shower",
       "Soaking Tub",
@@ -90,18 +90,18 @@ export const rooms: Room[] = [
   },
   {
     id: "3",
-    slug: "deluxe-room",
-    name: "Deluxe Room",
+    slug: "twine-room",
+    name: "Twine Room",
     shortDescription: "A lavish escape with panoramic views and bespoke luxury details.",
     description:
-      "Our Deluxe Room redefines luxury with its expansive layout, floor-to-ceiling windows offering panoramic city views, and a private balcony for morning coffee or evening aperitifs. The oversized bathroom features Italian marble, dual vanities, a freestanding tub, and a walk-in rain shower. Every element has been thoughtfully selected to create an unforgettable experience.",
+      "Our Twine Room redefines luxury with its expansive layout, floor-to-ceiling windows offering panoramic city views, and a private balcony for morning coffee or evening aperitifs. The oversized bathroom features Italian marble, dual vanities, a freestanding tub, and a walk-in rain shower. Every element has been thoughtfully selected to create an unforgettable experience.",
     bedType: "King",
     maxAdults: 2,
     maxChildren: 2,
     size: 550,
     floor: "8th - 12th",
     view: "Panoramic City View",
-    basePrice: 579,
+    basePrice: 26,
     
     images: [
       "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80",
@@ -111,8 +111,8 @@ export const rooms: Room[] = [
     amenities: [
       "Free Wi-Fi",
       "Air Conditioning",
-      "Mini Bar",
-      "55\" Smart TV",
+      
+      " Smart TV",
       "Rain Shower",
       "Freestanding Tub",
       "Private Balcony",
@@ -124,22 +124,22 @@ export const rooms: Room[] = [
       "Daily Housekeeping",
     ],
     featured: true,
-    roomNumbers: ["802", "901", "902", "1001", "1002", "1101", "1102", "1201"],
+    roomNumbers: ["802", "901"],
   },
   {
     id: "4",
-    slug: "junior-suite",
-    name: "Junior Suite",
+    slug: "business-suite",
+    name: "Business Suite",
     shortDescription: "Elegant living spaces with a distinct lounge area for relaxed luxury.",
     description:
-      "The Junior Suite blends residential comfort with hotel luxury, featuring a generous bedroom complemented by a distinct living area with plush seating. A walk-in closet, executive work desk, and premium entertainment system cater to every need. The marble bathroom with dual rain showers and a deep soaking tub provides the perfect retreat after a day of exploration.",
+      "The Business Suite blends residential comfort with hotel luxury, featuring a generous bedroom complemented by a distinct living area with plush seating. A walk-in closet, executive work desk, and premium entertainment system cater to every need. The marble bathroom with dual rain showers and a deep soaking tub provides the perfect retreat after a day of exploration.",
     bedType: "King",
     maxAdults: 3,
     maxChildren: 2,
     size: 700,
     floor: "10th - 15th",
     view: "River & City View",
-    basePrice: 799,
+    basePrice: 30,
     
     images: [
       "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80",
@@ -149,8 +149,8 @@ export const rooms: Room[] = [
     amenities: [
       "Free Wi-Fi",
       "Air Conditioning",
-      "Premium Mini Bar",
-      "55\" Smart TV",
+      
+      " Smart TV",
       "Living Area",
       "Walk-in Closet",
       "Dual Rain Shower",
@@ -165,7 +165,7 @@ export const rooms: Room[] = [
       "Executive Desk",
     ],
     featured: true,
-    roomNumbers: ["1003", "1103", "1203", "1301", "1401", "1501"],
+    roomNumbers: ["1003", "1103", "1203", "1301", "1401", "1501","1003", "1103", "1203", "1301", "1401"],
   },
   {
     id: "5",
@@ -175,12 +175,12 @@ export const rooms: Room[] = [
     description:
       "Our Executive Suite offers a truly exceptional experience with separate bedroom and living quarters connected by elegant French doors. The suite features a dining area seating four, a fully stocked bar, and a wraparound terrace with sweeping city views. Two opulent bathrooms feature heated floors, rain showers, and freestanding tubs. Butler service ensures every wish is anticipated.",
     bedType: "King",
-    maxAdults: 3,
-    maxChildren: 2,
+    maxAdults: 2,
+    maxChildren: 1,
     size: 1000,
-    floor: "15th - 18th",
+    floor: "5th - 6th",
     view: "Skyline Panorama",
-    basePrice: 1299,
+    basePrice: 33,
   
     images: [
       "https://images.unsplash.com/photo-1631049552057-403cdb8f0658?w=1200&q=80",
@@ -208,22 +208,22 @@ export const rooms: Room[] = [
       "Heated Bathroom Floors",
     ],
     featured: false,
-    roomNumbers: ["1502", "1601", "1701", "1801"],
+    roomNumbers: ["1502", "1601", "1701", "1801","1502", "1601", "1701", "1801","1502", "1601"],
   },
   {
     id: "6",
-    slug: "presidential-suite",
-    name: "Presidential Suite",
+    slug: "Family-suite",
+    name: "Family Suite",
     shortDescription: "The pinnacle of luxury - a private residence in the sky.",
     description:
-      "The Presidential Suite is the crown jewel of The Aurelian, occupying the entire top floor with 360-degree views of the city skyline. This private residence features a grand salon, formal dining room for eight, a private study, master bedroom with custom furnishings, and two additional guest bedrooms. The master bathroom is a sanctuary of Italian marble with a steam room, rain shower, and Japanese soaking tub. Dedicated butler and concierge services ensure an experience beyond compare.",
+      "The Family Suite is the crown jewel of The Aurelian, occupying the entire top floor with 360-degree views of the city skyline. This private residence features a grand salon, formal dining room for eight, a private study, master bedroom with custom furnishings, and two additional guest bedrooms. The master bathroom is a sanctuary of Italian marble with a steam room, rain shower, and Japanese soaking tub. Dedicated butler and concierge services ensure an experience beyond compare.",
     bedType: "Super King",
     maxAdults: 4,
-    maxChildren: 3,
+    maxChildren: 2,
     size: 2500,
     floor: "20th (Penthouse)",
     view: "360\u00B0 Skyline",
-    basePrice: 3999,
+    basePrice: 60,
     
     images: [
       "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80",
