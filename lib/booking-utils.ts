@@ -89,10 +89,10 @@ export function checkRoomAvailability(
 }
 
 export const ADD_ONS = [
-  { id: "breakfast", name: "Breakfast Package", price: 45, per: "per night" },
+  { id: "breakfast", name: "Breakfast Package", price: 0, per: "per night" },
   { id: "airport", name: "Airport Transfer", price: 120, per: "one way" },
-  { id: "spa", name: "Spa Package", price: 250, per: "per person" },
+  
   { id: "baby-bed", name: "Baby Bed", price: 0, per: "complimentary" },
-  { id: "late-checkout", name: "Late Checkout (2 PM)", price: 75, per: "one time" },
+  { id: "late-checkout", name: "Late Checkout (2 PM)", price: 6.7, per: "one time" },
   { id: "pet", name: "Pet Accommodation", price: 50, per: "per night" },
 ] as const
