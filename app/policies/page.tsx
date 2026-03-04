@@ -84,7 +84,7 @@ export default function PoliciesPage() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1800&q=80"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1551882547-ff40c63fe5fa_w1800.jpg"
           alt="Hotel policies"
           fill
           className="object-cover opacity-40"

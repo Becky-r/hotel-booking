@@ -44,7 +44,7 @@ export function LoginForm() {
         {/* Left - Image */}
         <div className="relative hidden w-5/12 lg:block">
           <Image
-            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+            src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w800.jpg"
             alt="Hotel entrance"
             fill
             className="object-cover"

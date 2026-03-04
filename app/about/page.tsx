@@ -47,7 +47,7 @@ export default function AboutPage() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1800&q=80"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1551882547-ff40c63fe5fa_w1800.jpg"
           alt="The Aurelian lobby"
           fill
           className="object-cover opacity-40"
@@ -65,7 +65,7 @@ export default function AboutPage() {
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg lg:w-5/12">
               <Image
-                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&q=80"
+                src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1200.jpg"
                 alt="The Aurelian entrance"
                 fill
                 className="object-cover"

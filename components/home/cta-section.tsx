@@ -7,7 +7,7 @@ export function CTASection() {
   return (
     <section className="relative flex items-center justify-center overflow-hidden py-28 lg:py-36">
       <Image
-        src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80"
+        src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1920.jpg"
         alt="Luxury hotel pool area"
         fill
         className="object-cover"

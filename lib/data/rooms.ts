@@ -37,9 +37,9 @@ export const rooms: Room[] = [
     weekendPrice: 349,
     holidayPrice: 449,
     images: [
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1611892440504-42a792e24d32_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1582719478250-c89cae4dc85b_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1631049307264-da0ec9d70304_w1200.jpg",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -71,9 +71,9 @@ export const rooms: Room[] = [
     weekendPrice: 499,
     holidayPrice: 599,
     images: [
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80",
-      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1590490360182-c33d57733427_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1566665797739-1674de7a421a_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1584132967334-10e028bd69f7_w1200.jpg",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -108,9 +108,9 @@ export const rooms: Room[] = [
     weekendPrice: 679,
     holidayPrice: 799,
     images: [
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80",
-      "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1578683010236-d716f9a3f461_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1591088398332-8a7791972843_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1595576508898-0ad5c879a061_w1200.jpg",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -147,9 +147,9 @@ export const rooms: Room[] = [
     weekendPrice: 929,
     holidayPrice: 1099,
     images: [
-      "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80",
-      "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1602002418082-a4443e081dd1_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1600210492486-724fe5c67fb0_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1560448205-4d9b3e6bb6db_w1200.jpg",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -189,9 +189,9 @@ export const rooms: Room[] = [
     weekendPrice: 1499,
     holidayPrice: 1799,
     images: [
-      "https://images.unsplash.com/photo-1631049552057-403cdb8f0658?w=1200&q=80",
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1631049552057-403cdb8f0658_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1582719508461-905c673771fd_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1590381105924-c72589b9ef3f_w1200.jpg",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -233,9 +233,9 @@ export const rooms: Room[] = [
     weekendPrice: 4499,
     holidayPrice: 5499,
     images: [
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80",
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200&q=80",
+      "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1618773928121-c32242e63f39_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1542314831-068cd1dbfeeb_w1200.jpg",
+      "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1551882547-ff40c63fe5fa_w1200.jpg",
     ],
     amenities: [
       "Premium Wi-Fi",

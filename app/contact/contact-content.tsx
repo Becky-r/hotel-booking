@@ -30,7 +30,7 @@ export function ContactContent() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1800&q=80"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1800.jpg"
           alt="The Aurelian exterior"
           fill
           className="object-cover opacity-40"

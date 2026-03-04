@@ -19,7 +19,7 @@ export default function BlogPage() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1800&q=80"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1502602898657-3e91760cbb34_w1800.jpg"
           alt="Paris skyline"
           fill
           className="object-cover opacity-40"

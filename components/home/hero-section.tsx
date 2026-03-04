@@ -10,7 +10,7 @@ export function HeroSection() {
     <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1920&q=80"
+        src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1542314831-068cd1dbfeeb_w1920.jpg"
         alt="The Aurelian hotel exterior"
         fill
         className="object-cover"

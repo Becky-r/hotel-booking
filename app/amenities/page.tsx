@@ -26,7 +26,7 @@ export default function AmenitiesPage() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1800&q=80"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1544161515-4ab6ce6db874_w1800.jpg"
           alt="The Aurelian Spa"
           fill
           className="object-cover opacity-40"

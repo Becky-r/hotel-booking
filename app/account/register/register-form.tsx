@@ -58,7 +58,7 @@ export function RegisterForm() {
         {/* Left - Image */}
         <div className="relative hidden w-5/12 lg:block">
           <Image
-            src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80"
+            src="https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1618773928121-c32242e63f39_w800.jpg"
             alt="Presidential Suite"
             fill
             className="object-cover"
