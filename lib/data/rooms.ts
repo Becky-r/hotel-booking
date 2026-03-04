@@ -11,8 +11,7 @@ export interface Room {
   floor: string
   view: string
   basePrice: number
-  weekendPrice: number
-  holidayPrice: number
+  
   images: string[]
   amenities: string[]
   featured: boolean
@@ -34,10 +33,9 @@ export const rooms: Room[] = [
     floor: "3rd - 5th",
     view: "City View",
     basePrice: 299,
-    weekendPrice: 349,
-    holidayPrice: 449,
+    
     images: [
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80",
+      "images/5N5A0225.JPG",
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
       "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80",
     ],
@@ -68,8 +66,7 @@ export const rooms: Room[] = [
     floor: "5th - 8th",
     view: "Garden View",
     basePrice: 429,
-    weekendPrice: 499,
-    holidayPrice: 599,
+    
     images: [
       "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80",
       "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80",
@@ -105,8 +102,7 @@ export const rooms: Room[] = [
     floor: "8th - 12th",
     view: "Panoramic City View",
     basePrice: 579,
-    weekendPrice: 679,
-    holidayPrice: 799,
+    
     images: [
       "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80",
       "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200&q=80",
@@ -144,8 +140,7 @@ export const rooms: Room[] = [
     floor: "10th - 15th",
     view: "River & City View",
     basePrice: 799,
-    weekendPrice: 929,
-    holidayPrice: 1099,
+    
     images: [
       "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80",
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80",
@@ -186,8 +181,7 @@ export const rooms: Room[] = [
     floor: "15th - 18th",
     view: "Skyline Panorama",
     basePrice: 1299,
-    weekendPrice: 1499,
-    holidayPrice: 1799,
+  
     images: [
       "https://images.unsplash.com/photo-1631049552057-403cdb8f0658?w=1200&q=80",
       "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=80",
@@ -230,8 +224,7 @@ export const rooms: Room[] = [
     floor: "20th (Penthouse)",
     view: "360\u00B0 Skyline",
     basePrice: 3999,
-    weekendPrice: 4499,
-    holidayPrice: 5499,
+    
     images: [
       "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80",
       "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&q=80",
