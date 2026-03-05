@@ -16,17 +16,17 @@ const _playfair = Playfair_Display({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "The Aurelian | Luxury 5-Star Hotel in Paris",
-    template: "%s | The Aurelian",
+    default: "The Kerawi | Luxury 3-Star Hotel in Paris",
+    template: "%s | The Kerawi",
   },
   description:
-    "Experience unparalleled luxury at The Aurelian, a five-star hotel in the heart of Paris. Exquisite rooms, world-class dining, and bespoke services await.",
+    "Experience unparalleled luxury at The Kerawi, a 3-star hotel in the heart of Hawassa,Ethiopian. Exquisite rooms, world-class dining, and bespoke services await.",
   keywords: [
     "luxury hotel",
-    "Paris hotel",
-    "5-star hotel",
-    "The Aurelian",
-    "boutique hotel Paris",
+    "Hawassa,Ethiopian hotel",
+    "3-star hotel",
+    "The Kerawi",
+    "boutique hotel ",
     "luxury accommodation",
   ],
   icons: {

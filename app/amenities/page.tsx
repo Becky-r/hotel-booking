@@ -24,7 +24,7 @@ export default function AmenitiesPage() {
   return (
     <main>
       {/* Hero Banner */}
-      <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-150">
+      <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
 
 
