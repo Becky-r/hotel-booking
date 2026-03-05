@@ -139,20 +139,8 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
                       </p>
                       <span className="font-sans text-xs text-muted-foreground">per night</span>
                     </div>
-                    <div className="border-x border-border/50 bg-secondary/50 p-4 text-center">
-                      <span className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">Weekend</span>
-                      <p className="mt-1 font-serif text-xl font-bold text-foreground">
-                        {formatCurrency(room.weekendPrice, currency)}
-                      </p>
-                      <span className="font-sans text-xs text-muted-foreground">per night</span>
-                    </div>
-                    <div className="bg-secondary/50 p-4 text-center">
-                      <span className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">Holiday</span>
-                      <p className="mt-1 font-serif text-xl font-bold text-foreground">
-                        {formatCurrency(room.holidayPrice, currency)}
-                      </p>
-                      <span className="font-sans text-xs text-muted-foreground">per night</span>
-                    </div>
+                   
+                  
                   </div>
                 </div>
               </div>

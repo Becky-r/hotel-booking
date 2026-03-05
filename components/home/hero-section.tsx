@@ -10,7 +10,11 @@ export function HeroSection() {
     <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
+<<<<<<< HEAD
         src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1542314831-068cd1dbfeeb_w1920.jpg"
+=======
+        src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0168.JPG"
+>>>>>>> 684fba3 (edit the file)
         alt="The Aurelian hotel exterior"
         fill
         className="object-cover"
@@ -22,8 +26,8 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-8 px-4 text-center">
         {/* Stars */}
-        <div className="flex items-center gap-1" aria-label="5-star hotel">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="flex items-center gap-1" aria-label="3-star hotel">
+          {Array.from({ length: 3 }).map((_, i) => (
             <Star key={i} className="size-4 fill-gold text-gold" />
           ))}
         </div>

@@ -5,7 +5,7 @@ import { SectionHeading } from "@/components/shared/section-heading"
 import { HOTEL_NAME, HOTEL_STAR_RATING } from "@/lib/constants"
 
 export const metadata: Metadata = {
-  title: "About Us | The Aurelian",
+  title: "About Us | The Kerawi",
   description: "Learn about the rich heritage and unwavering commitment to excellence at The Aurelian.",
 }
 
@@ -45,10 +45,15 @@ export default function AboutPage() {
   return (
     <main>
       {/* Hero Banner */}
-      <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
+      <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-150">
         <Image
+<<<<<<< HEAD
           src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1551882547-ff40c63fe5fa_w1800.jpg"
           alt="The Aurelian lobby"
+=======
+          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0064.JPG?updatedAt=1772686038137"
+          alt="The Kerawi lobby"
+>>>>>>> 684fba3 (edit the file)
           fill
           className="object-cover opacity-40"
           priority
@@ -65,8 +70,13 @@ export default function AboutPage() {
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg lg:w-5/12">
               <Image
+<<<<<<< HEAD
                 src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1200.jpg"
                 alt="The Aurelian entrance"
+=======
+                src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0047.JPG?updatedAt=1772686039055"
+                alt="The Kerawi entrance"
+>>>>>>> 684fba3 (edit the file)
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 42vw"
