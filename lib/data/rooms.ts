@@ -73,9 +73,8 @@ export const rooms: Room[] = [
     
     images: [
 
-
-      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9749.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9753.JPG",
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9749.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9785.JPG",
     ],
     amenities: [
@@ -114,7 +113,7 @@ export const rooms: Room[] = [
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9824.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9827.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9828.JPG",
-
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9787.JPG?updatedAt=1772686457680",
     ],
     amenities: [
       "Free Wi-Fi",
@@ -150,11 +149,13 @@ export const rooms: Room[] = [
     basePrice: 30,
     
     images: [
-
-      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9792.JPG",
-      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9811.JPG?updatedAt=1772686451545",
+"https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9812.JPG",
+      
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9820.JPG",
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9802.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9814.JPG",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9821.JPG",
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9803.JPG",
 
     ],
     amenities: [
@@ -198,6 +199,7 @@ export const rooms: Room[] = [
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9791.JPG?updatedAt=1772686421975",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9780.JPG?updatedAt=1772686437621",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9789.JPG?updatedAt=1772686439929",
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9717.JPG?updatedAt=1772686417599",
 
     ],
     amenities: [
@@ -239,11 +241,9 @@ export const rooms: Room[] = [
     basePrice: 60,
     
     images: [
-
-      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9702.JPG?updatedAt=1772686421608",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9708.JPG?updatedAt=1772686423581",
+      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9702.JPG?updatedAt=1772686421608",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9726.JPG?updatedAt=1772686410084",
-      "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9721.JPG?updatedAt=1772686419128",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9724.JPG?updatedAt=1772686399888",
       "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9716.JPG?updatedAt=1772686426414",
 

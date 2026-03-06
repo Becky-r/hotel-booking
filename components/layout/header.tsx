@@ -53,7 +53,7 @@ export function Header() {
               {HOTEL_NAME}
             </span>
             <span className="hidden text-[10px] font-sans uppercase tracking-[0.25em] text-gold sm:block">
-              Paris
+              Hawassa Ethiopia
             </span>
           </Link>
 

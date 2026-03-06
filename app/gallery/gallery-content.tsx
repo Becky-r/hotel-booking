@@ -24,8 +24,8 @@ const galleryImages = [
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9791.JPG?updatedAt=1772686421975", alt: "Executive Suite", category: "Rooms" },
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9706.JPG?updatedAt=1772686417139", alt: "Family Suite", category: "Rooms" },
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9697.JPG?updatedAt=1772726961292", alt: "Meeting one", category: "Events" },
-  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9701.JPG?updatedAt=1772726961239", alt: "Meeting one", category: "Events" },
-  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9856.JPG?updatedAt=1772727133975", alt: "meeting two", category: "Events" },
+  
+  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9862.JPG?updatedAt=1772727134178", alt: "meeting two", category: "Events" },
   
 
 
@@ -80,9 +80,10 @@ const galleryImages = [
 
 
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9458.JPG?updatedAt=1772726926593", alt: "Stylish dining hall design", category: "Dining" },
+{ src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9440.JPG?updatedAt=1772802241627", alt: "Restaurant premium dining experience", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9457.JPG?updatedAt=1772726928103", alt: "Elegant restaurant seating", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9455.JPG?updatedAt=1772726925349", alt: "Fine dining environment", category: "Dining" },
-{ src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9439.JPG?updatedAt=1772726924926", alt: "Restaurant interior decoration", category: "Dining" },
+
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9497.JPG?updatedAt=1772726923522", alt: "Dining space with modern design", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0354.JPG?updatedAt=1772726824204", alt: "Restaurant evening atmosphere", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0348.JPG?updatedAt=1772726820486", alt: "Luxury dining room view", category: "Dining" },
@@ -95,7 +96,12 @@ const galleryImages = [
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0366.JPG?updatedAt=1772726929271", alt: "Comfortable dining chairs and tables", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9474.JPG?updatedAt=1772726926408", alt: "Luxury restaurant ambience", category: "Dining" },
 { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0358.JPG?updatedAt=1772726928003", alt: "Le Dore Restaurant", category: "Dining" },
+
+
+
+
 ]
+
 
 export function GalleryContent() {
   const [activeCategory, setActiveCategory] = useState<(typeof galleryCategories)[number]>("All")

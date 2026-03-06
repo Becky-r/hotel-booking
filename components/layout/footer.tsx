@@ -36,7 +36,7 @@ export function Footer() {
                 {HOTEL_NAME}
               </h3>
               <p className="text-[10px] font-sans uppercase tracking-[0.25em] text-gold">
-                Paris
+                Hawassa Ethiopia
               </p>
             </div>
             <p className="text-sm leading-relaxed text-primary-foreground/60">

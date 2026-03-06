@@ -30,7 +30,7 @@ export function ContactContent() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1800.jpg"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0182.JPG?updatedAt=1772726826423"
           alt="The Aurelian exterior"
           fill
           className="object-cover opacity-40"
@@ -128,7 +128,7 @@ export function ContactContent() {
               <div className="overflow-hidden rounded-lg border border-border/50">
                 <iframe
                   title="The Aurelian location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.2159070385584!2d2.3042889!3d48.8698246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fc4e8f38fed%3A0x48e5f7c3ea1ccdf6!2sAv.+des+Champs-%C3%89lys%C3%A9es%2C+Paris%2C+France!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.7506118933798!2d38.4838812!3d7.038568700000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x17b1459d02e10767%3A0x427f9e72d2fb535d!2sKerawi%20International%20Hotel!5e0!3m2!1sen!2sus!4v1772805020273!5m2!1sen!2sus"
                   width="100%"
                   height="300"
                   style={{ border: 0 }}
