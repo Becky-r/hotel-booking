@@ -15,10 +15,10 @@ const galleryImages = [
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9811.JPG?updatedAt=1772686451545", alt: "Business Suite", category: "Rooms" },
 
 
-  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0047.JPG?updatedAt=1772686039055", alt: "Hotel Exterior", category: "Exterior" },
-  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/file.jpg", alt: "Hotel Entrance", category: "Exterior" },
-  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9511.JPG?updatedAt=1772686447033", alt: "Luxury hotel exterior view", category: "Exterior" },
-  {src: "https://ik.imagekit.io/hawassa/hotel-booking/public/building%20no%20color.jpg", alt: "Modern hotel building front view", category: "Exterior" },
+  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8087.JPG", alt: "Hotel Exterior", category: "Exterior" },
+  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8077.JPG", alt: "Hotel Entrance", category: "Exterior" },
+  { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8086.JPG", alt: "Luxury hotel exterior view", category: "Exterior" },
+  {src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8108.JPG", alt: "Modern hotel building front view", category: "Exterior" },
 
   
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9791.JPG?updatedAt=1772686421975", alt: "Executive Suite", category: "Rooms" },
@@ -115,15 +115,21 @@ export function GalleryContent() {
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-150">
         <Image
           src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0005.JPG?updatedAt=1772685997411"
-          alt="The Aurelian gallery"
+          alt="The Kerawi gallery"
           fill
-          className="object-cover opacity-40"
+          className="object-cover opacity-90"
           priority
         />
         <div className="relative z-10 text-center">
-          <h1 className="font-serif text-4xl text-cream md:text-5xl lg:text-6xl">Gallery</h1>
-          <p className="mt-2 font-sans text-sm text-cream/70">A visual journey through The Aurelian</p>
-        </div>
+          <section className="relative flex h-64 items-start justify-center overflow-hidden pt-1px">
+
+                 <div className="relative z-10 text-center">
+                      <h1 className="font-serif text-4xl text-cream md:text-5xl lg:text-6xl">Gallery</h1>
+                          <p className="mt-2 font-sans text-sm text-cream/70">A visual journey through The Kerawi</p>
+                   </div>
+</section>
+  
+</div>
       </section>
 
       {/* Gallery Grid */}

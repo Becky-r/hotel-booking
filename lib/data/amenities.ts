@@ -20,7 +20,7 @@ export const amenities: Amenity[] = [
     description:
       "Our heated rooftop Terraceoffers panoramic city views from the 6th floor. Surrounded by private cabanas and loungers, it is the perfect place to unwind. Poolside dining and signature cocktails are available throughout the day.",
     icon: "Waves",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9733.JPG",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9732.JPG?updatedAt=1772802352092",
     category: "leisure",
   },
   {

@@ -7,12 +7,12 @@ import { Star } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[99vh] items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://ik.imagekit.io/hawassa/hotel-booking/public/file.jpg"
+        src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8090.JPG"
        
-        alt="The Aurelian hotel exterior"
+        alt="The Kerawi hotel exterior"
         fill
         className="object-cover"
         priority

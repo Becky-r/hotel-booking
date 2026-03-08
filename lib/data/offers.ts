@@ -21,7 +21,7 @@ export const offers: Offer[] = [
     discount: "Up to 25% Off",
     promoCode: "EARLYBIRD",
     validUntil: "2026-06-30",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1551882547-ff40c63fe5fa_w800.jpg",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0358.JPG?updatedAt=1772726928003",
     terms: [
       "Must be booked at least 30 days before arrival",
       "Non-refundable after booking",
@@ -39,7 +39,7 @@ export const offers: Offer[] = [
     discount: "25% Off + Spa Credit",
     promoCode: "SUMMER25",
     validUntil: "2026-09-15",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1582268611958-ebfd161ef9cf_w800.jpg",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8113.JPG",
     terms: [
       "Valid for stays between June 1 and September 15",
       "Minimum 3-night stay required",
@@ -57,7 +57,7 @@ export const offers: Offer[] = [
     discount: "From $799 per night",
     promoCode: "WELCOME10",
     validUntil: "2026-12-31",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/recent/photo-1596178065887-1198b6148b2b_w800.jpg",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0182.JPG?updatedAt=1772726826423",
     terms: [
       "Minimum 2-night stay required",
       "Includes dinner for two at Le Dore",
@@ -75,7 +75,7 @@ export const offers: Offer[] = [
     discount: "30% Off (7+ Nights)",
     promoCode: "LUXURY100",
     validUntil: "2026-12-31",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w800.jpg",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9901.JPG?updatedAt=1772727135494",
     terms: [
       "Minimum 7-night stay required",
       "Full prepayment at time of booking",
@@ -93,7 +93,7 @@ export const offers: Offer[] = [
     discount: "15% Off Weekends",
     promoCode: "WELCOME10",
     validUntil: "2026-12-31",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1542314831-068cd1dbfeeb_w800.jpg",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8092.JPG",
     terms: [
       "Valid for Friday-Sunday stays only",
       "Includes Saturday brunch",

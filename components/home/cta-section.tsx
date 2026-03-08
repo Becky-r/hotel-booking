@@ -7,10 +7,10 @@ export function CTASection() {
   return (
     <section className="relative flex items-center justify-center overflow-hidden py-28 lg:py-36">
       <Image
-        src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w1920.jpg"
-        alt="Luxury hotel pool area"
+        src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0307.JPG?updatedAt=1772726826447"
+        alt="Luxury hotel area"
         fill
-        className="object-cover"
+       className="object-cover opacity-90"
       />
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 text-center">
@@ -31,7 +31,7 @@ export function CTASection() {
             </Button>
           </Link>
           <Link href="/contact">
-            <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white font-sans text-xs uppercase tracking-wider px-8">
+            <Button variant="outline" className="bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs font-semibold uppercase tracking-wider px-8">
               Contact Us
             </Button>
           </Link>

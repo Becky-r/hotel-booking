@@ -52,12 +52,12 @@ export default function AboutPage() {
           alt="The Kerawi lobby"
 
           fill
-          className="object-cover opacity-40"
+          className="object-cover opacity-70"
           priority
         />
         <div className="relative z-10 text-center">
-          <h1 className="font-serif text-4xl text-cream md:text-5xl lg:text-6xl">Our Story</h1>
-          <p className="mt-2 font-sans text-sm text-cream/70">Nearly a century of extraordinary hospitality</p>
+          <h1 className="font-serif text-4xl text-cream md:text-4xl lg:text-6xl overflow-hidden pt-35">Our Story</h1>
+          <p className="mt-2 font-sans text-sm text-cream/100">Nearly a century of extraordinary hospitality</p>
         </div>
       </section>
 
@@ -65,10 +65,10 @@ export default function AboutPage() {
       <section className="bg-background py-16 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 lg:px-8">
           <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg lg:w-5/12">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg lg:w-7/12">
               <Image
 
-                src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0047.JPG?updatedAt=1772686039055"
+                src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8077.JPG"
                 alt="The Kerawi entrance"
 
                 fill
