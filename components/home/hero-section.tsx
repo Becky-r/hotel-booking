@@ -10,7 +10,7 @@ export function HeroSection() {
     <section className="relative flex min-h-[99vh] items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8090.JPG"
+        src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8087.JPG?updatedAt=1772962015224"
        
         alt="The Kerawi hotel exterior"
         fill
