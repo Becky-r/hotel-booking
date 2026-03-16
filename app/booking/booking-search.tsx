@@ -1,239 +1,390 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { format } from "date-fns"
-import { CalendarDays, Users, BedDouble, Maximize, ArrowRight, Tag, Check, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { useBooking } from "@/contexts/booking-context"
-import { useSite } from "@/contexts/site-context"
-import { rooms } from "@/lib/data/rooms"
-import { calculateStayPrice, applyPromoCode } from "@/lib/booking-utils"
-import { formatCurrency } from "@/lib/format"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { format } from "date-fns";
+import {
+  CalendarDays,
+  Users,
+  BedDouble,
+  Maximize,
+  ArrowRight,
+} from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import { useBooking } from "@/contexts/booking-context";
+import { useSite } from "@/contexts/site-context";
+
+import { rooms } from "@/lib/data/rooms";
+import { calculateStayPrice } from "@/lib/booking-utils";
+import { formatCurrency } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 export function BookingSearch() {
-  const { booking, setCheckIn, setCheckOut, setAdults, setChildren, setSelectedRoom, setPromoCode, setPromoDiscount } = useBooking()
-  const { currency } = useSite()
-  const [promoInput, setPromoInput] = useState("")
-  const [promoResult, setPromoResult] = useState<{ valid: boolean; description: string } | null>(null)
-  const [searched, setSearched] = useState(false)
+  const {
+    booking,
+    setCheckIn,
+    setCheckOut,
+    setAdults,
+    setChildren,
 
-  const hasDate = booking.checkIn && booking.checkOut
+    selectedRooms,
+    getRoomQuantity,
+    updateRoomQuantity,
+    toggleRoomSelection,
+    isRoomSelected,
+  } = useBooking();
 
-  const handleSearch = () => {
-    setSearched(true)
+  const { currency } = useSite();
+
+  const [searched, setSearched] = useState(false);
+
+  const hasDate = booking.checkIn && booking.checkOut;
+
+  const handleSearch = () => setSearched(true);
+
+  const availableRooms = rooms.filter(
+    (room) => room.maxAdults >= booking.adults,
+  );
+
+  const totalRooms = selectedRooms.reduce((sum, r) => sum + r.quantity, 0);
+  const totalTypes = selectedRooms.length;
+  const handleClearSelection = () => {
+    selectedRooms.forEach((r) => updateRoomQuantity(r.roomId, 0));
   }
-
-  const handleApplyPromo = () => {
-    if (!promoInput.trim()) return
-    const result = applyPromoCode(promoInput, 1000)
-    setPromoResult({ valid: result.valid, description: result.description })
-    if (result.valid) {
-      setPromoCode(promoInput.toUpperCase())
-    }
-  }
-
-  const handleSelectRoom = (room: typeof rooms[number]) => {
-    setSelectedRoom(room)
-  }
-
-  const availableRooms = rooms.filter((room) => room.maxAdults >= booking.adults)
-
+  console.log("Booking State:", booking);
+  console.log("Selected Rooms:", selectedRooms);
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
-        {/* Search Form */}
-        <div className="rounded-lg border border-border/50 bg-card p-6 shadow-sm">
+        {/* SEARCH BAR */}
+
+        <div className="sticky top-20 z-50 rounded-lg border border-border/50 bg-card p-6 shadow-sm">
           <div className="grid gap-4 md:grid-cols-5">
+            {/* CHECK IN */}
+
             <div className="flex flex-col gap-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Check-in
               </label>
+
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className={cn("justify-start gap-2 font-sans text-sm font-normal", !booking.checkIn && "text-muted-foreground")}
+                    className={cn(
+                      "justify-start gap-2",
+                      !booking.checkIn && "text-muted-foreground",
+                    )}
                   >
                     <CalendarDays className="size-4 text-gold" />
-                    {booking.checkIn ? format(booking.checkIn, "MMM d, yyyy") : "Select date"}
+
+                    {booking.checkIn
+                      ? format(booking.checkIn, "MMM d, yyyy")
+                      : "Select date"}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={booking.checkIn} onSelect={setCheckIn} disabled={{ before: new Date() }} />
+
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={booking.checkIn}
+                    onSelect={setCheckIn}
+                    disabled={{ before: new Date() }}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
 
+            {/* CHECK OUT */}
+
             <div className="flex flex-col gap-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Check-out
               </label>
+
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className={cn("justify-start gap-2 font-sans text-sm font-normal", !booking.checkOut && "text-muted-foreground")}
+                    className={cn(
+                      "justify-start gap-2",
+                      !booking.checkOut && "text-muted-foreground",
+                    )}
                   >
                     <CalendarDays className="size-4 text-gold" />
-                    {booking.checkOut ? format(booking.checkOut, "MMM d, yyyy") : "Select date"}
+
+                    {booking.checkOut
+                      ? format(booking.checkOut, "MMM d, yyyy")
+                      : "Select date"}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={booking.checkOut} onSelect={setCheckOut} disabled={{ before: booking.checkIn || new Date() }} />
+
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={booking.checkOut}
+                    onSelect={setCheckOut}
+                    disabled={{ before: booking.checkIn || new Date() }}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
 
+            {/* ADULTS */}
+
             <div className="flex flex-col gap-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Adults</label>
-              <Select value={String(booking.adults)} onValueChange={(v) => setAdults(Number(v))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <label className="text-xs font-semibold uppercase text-muted-foreground">
+                Adults
+              </label>
+
+              <Select
+                value={String(booking.adults)}
+                onValueChange={(v) => setAdults(Number(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+
                 <SelectContent>
                   {[1, 2, 3, 4].map((n) => (
-                    <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "Adult" : "Adults"}</SelectItem>
+                    <SelectItem key={n} value={String(n)}>
+                      {n} {n === 1 ? "Adult" : "Adults"}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {/* CHILDREN */}
 
             <div className="flex flex-col gap-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Children</label>
-              <Select value={String(booking.children)} onValueChange={(v) => setChildren(Number(v))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <label className="text-xs font-semibold uppercase text-muted-foreground">
+                Children
+              </label>
+
+              <Select
+                value={String(booking.children)}
+                onValueChange={(v) => setChildren(Number(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+
                 <SelectContent>
                   {[0, 1, 2, 3].map((n) => (
-                    <SelectItem key={n} value={String(n)}>{n} {n === 1 ? "Child" : "Children"}</SelectItem>
+                    <SelectItem key={n} value={String(n)}>
+                      {n} {n === 1 ? "Child" : "Children"}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
+            {/* SEARCH BUTTON */}
+
             <div className="flex flex-col justify-end">
-              <Button onClick={handleSearch} className="bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs font-semibold uppercase tracking-wider">
+              <Button
+                onClick={handleSearch}
+                className="bg-gold text-charcoal hover:bg-gold-dark"
+              >
                 Search
               </Button>
             </div>
-          </div>
-
-          {/* Promo Code */}
-          <div className="mt-4 flex items-end gap-2 border-t border-border/30 pt-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                Promo Code
-              </label>
-              <div className="flex gap-2">
-                <Input
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="Enter code"
-                  className="h-9 w-48 text-sm uppercase"
-                />
-                <Button variant="outline" size="sm" onClick={handleApplyPromo}>
-                  <Tag className="size-3.5" /> Apply
+            {selectedRooms.length > 0 && (
+              <div className="flex flex-col justify-end">
+                <Button
+                  onClick={handleClearSelection}
+                  className="bg-gold text-charcoal hover:bg-gold-dark"
+                >
+                  Clear All Selected
                 </Button>
-              </div>
-            </div>
-            {promoResult && (
-              <div className={cn("flex items-center gap-1.5 text-xs", promoResult.valid ? "text-green-600" : "text-destructive")}>
-                {promoResult.valid ? <Check className="size-3.5" /> : <X className="size-3.5" />}
-                {promoResult.description}
               </div>
             )}
           </div>
         </div>
 
-        {/* Results */}
+        {/* RESULTS */}
+
         {searched && (
           <div className="mt-8">
-            <h2 className="font-serif text-2xl font-bold text-foreground">
+            <h2 className="text-2xl font-bold">
               {hasDate ? "Available Rooms" : "Select dates to see pricing"}
             </h2>
-            <p className="mt-1 font-sans text-sm text-muted-foreground">
-              {availableRooms.length} rooms match your criteria
+
+            <p className="text-sm text-muted-foreground">
+              {availableRooms.length} room types
             </p>
 
             <div className="mt-6 flex flex-col gap-4">
               {availableRooms.map((room) => {
+                const quantity = getRoomQuantity(room.id);
+                const selected = isRoomSelected(room.id);
+
                 const pricing = hasDate
-                  ? calculateStayPrice(room, booking.checkIn!, booking.checkOut!)
-                  : null
+                  ? calculateStayPrice(
+                      room,
+                      booking.checkIn!,
+                      booking.checkOut!,
+                    )
+                  : null;
 
                 return (
                   <div
                     key={room.id}
+                    onClick={() => toggleRoomSelection(room.id, !selected)}
                     className={cn(
-                      "flex flex-col overflow-hidden rounded-lg border bg-card transition-all sm:flex-row",
-                      booking.selectedRoom?.id === room.id ? "border-gold ring-1 ring-gold" : "border-border/50"
+                      "flex flex-col sm:flex-row rounded-lg border bg-card overflow-hidden relative transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg cursor-pointer group",
+                      selected
+                        ? "border-gold ring-1 ring-gold"
+                        : "border-border/50",
                     )}
                   >
-                    <div className="relative aspect-[4/3] sm:aspect-auto sm:w-48">
-                      <Image src={room.images[0]} alt={room.name} fill className="object-cover" />
+                    {/* HOVER CHECKBOX */}
+                    <div
+                      className={cn(
+                        "absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+                        selected
+                          ? "bg-gold border-gold"
+                          : "border-gray-300 bg-white opacity-2 group-hover:opacity-100",
+                      )}
+                    >
+                      {selected && (
+                        <div className="w-3 h-3 rounded-full bg-white" />
+                      )}
                     </div>
-                    <div className="flex flex-1 flex-col justify-between p-4 sm:flex-row sm:items-center">
-                      <div className="flex flex-col gap-1">
-                        <h3 className="font-serif text-lg font-bold text-foreground">{room.name}</h3>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1"><BedDouble className="size-3" />{room.bedType}</span>
-                          <span className="flex items-center gap-1"><Users className="size-3" />{room.maxAdults} guests</span>
-                          <span className="flex items-center gap-1"><Maximize className="size-3" />{room.size} sqft</span>
+
+                    {/* IMAGE */}
+                    <div className="relative sm:w-48 aspect-[4/3]">
+                      <Image
+                        src={room.images[0]}
+                        alt={room.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* CONTENT */}
+                    <div className="flex flex-1 justify-between p-4">
+                      {/* LEFT SIDE */}
+                      <div>
+                        <h3 className="text-lg font-bold">{room.name}</h3>
+
+                        <div className="flex gap-3 text-xs text-muted-foreground mt-1">
+                          <span className="flex gap-1 items-center">
+                            <BedDouble className="size-3" /> {room.bedType}
+                          </span>
+                          <span className="flex gap-1 items-center">
+                            <Users className="size-3" /> {room.maxAdults} guests
+                          </span>
+                          <span className="flex gap-1 items-center">
+                            <Maximize className="size-3" /> {room.size} sqft
+                          </span>
                         </div>
+
                         {room.featured && (
-                          <Badge variant="secondary" className="mt-1 w-fit text-[10px]">Popular Choice</Badge>
+                          <Badge className="mt-2 text-xs">Popular Choice</Badge>
                         )}
                       </div>
-                      <div className="mt-3 flex items-center gap-4 sm:mt-0">
+
+                      {/* RIGHT SIDE (Pricing + Quantity) */}
+                      <div className="flex items-center gap-4">
                         <div className="text-right">
                           {pricing ? (
                             <>
-                              <p className="font-serif text-xl font-bold text-foreground">
+                              <p className="text-xl font-bold">
                                 {formatCurrency(pricing.total, currency)}
                               </p>
-                              <span className="font-sans text-xs text-muted-foreground">
-                                {pricing.nights} {pricing.nights === 1 ? "night" : "nights"} total
+                              <span className="text-xs text-muted-foreground">
+                                {pricing.nights} nights
                               </span>
                             </>
                           ) : (
                             <>
-                              <p className="font-serif text-xl font-bold text-foreground">
+                              <p className="text-xl font-bold">
                                 {formatCurrency(room.basePrice, currency)}
                               </p>
-                              <span className="font-sans text-xs text-muted-foreground">per night</span>
+                              <span className="text-xs text-muted-foreground">
+                                per night
+                              </span>
                             </>
                           )}
                         </div>
-                        {booking.selectedRoom?.id === room.id ? (
-                          <Link href="/booking/checkout">
-                            <Button className="gap-1 bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs uppercase tracking-wider">
-                              Continue <ArrowRight className="size-3" />
-                            </Button>
-                          </Link>
-                        ) : (
+
+                        {/* QUANTITY */}
+                        <div className="flex items-center gap-2">
                           <Button
+                            size="icon"
                             variant="outline"
-                            onClick={() => handleSelectRoom(room)}
-                            className="font-sans text-xs uppercase tracking-wider"
+                            disabled={!selected || quantity === 0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateRoomQuantity(room.id, quantity - 1);
+                            }}
                           >
-                            Select
+                            -
                           </Button>
-                        )}
+
+                          <span className="w-6 text-center">
+                            {selected ? quantity : "-"}
+                          </span>
+
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            disabled={!selected}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateRoomQuantity(room.id, quantity + 1);
+                            }}
+                          >
+                            +
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
+
+            {/* PROCEED BAR */}
+
+            {totalTypes > 0 && (
+              <div className="sticky bottom-6 mt-6 flex justify-between items-center rounded-lg border bg-card p-4 shadow">
+                <span className="font-medium">
+                  {totalRooms} room{totalRooms > 1 ? "s" : ""} across{" "}
+                  {totalTypes} type{totalTypes > 1 ? "s" : ""}
+                </span>
+
+                <Link href="/booking/checkout">
+                  <Button className="bg-gold text-charcoal hover:bg-gold-dark">
+                    Proceed
+                    <ArrowRight className="size-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>
     </section>
-  )
+  );
 }
