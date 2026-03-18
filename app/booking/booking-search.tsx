@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import {
   CalendarDays,
   Users,
@@ -68,9 +68,13 @@ export function BookingSearch() {
   const totalTypes = selectedRooms.length;
   const handleClearSelection = () => {
     selectedRooms.forEach((r) => updateRoomQuantity(r.roomId, 0));
+    setSearched(false);
+    setCheckIn(undefined);
+    setCheckOut(undefined);
+    setAdults(1);
+    setChildren(0);
   }
-  console.log("Booking State:", booking);
-  console.log("Selected Rooms:", selectedRooms);
+
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
@@ -253,7 +257,7 @@ export function BookingSearch() {
                     className={cn(
                       "flex flex-col sm:flex-row rounded-lg border bg-card overflow-hidden relative transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg cursor-pointer group",
                       selected
-                        ? "border-gold ring-1 ring-gold"
+                        ? "ring-1 ring-gold"
                         : "border-border/50",
                     )}
                   >
