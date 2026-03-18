@@ -234,7 +234,7 @@ export async function availableRooms(params: {
   adults: number;
   children: number;
 }) {
-  return apiRequest("GET", "booking/available-rooms/", params);
+  return apiRequest("GET", "/booking/available-rooms/", params);
 }
 
 export async function createBooking(data: any) {
@@ -260,7 +260,7 @@ export async function cancelBooking(reference: string) {
 }
 
 export async function validateBooking(data: any) {
-  return apiRequest("GET", "/booking/validate-booking/", data);
+  return apiRequest("POST", "/booking/validate-booking/", data);
 }
 
 export async function getBookingDetails(reference: string) {
