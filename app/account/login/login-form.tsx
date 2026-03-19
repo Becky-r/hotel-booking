@@ -1,41 +1,48 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
-import { Eye, EyeOff, LogIn } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useAuth } from "@/contexts/auth-context"
-import { HOTEL_NAME } from "@/lib/constants"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/auth-context";
+import { HOTEL_NAME } from "@/lib/constants";
+import { SplashScreen } from "@/components/layout/splash-screen";
 
 export function LoginForm() {
-  const { login } = useAuth()
-  const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const { login, loadingUser , user } = useAuth();
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
-      const success = await login(email, password)
-      if (success) {
-        router.push("/account")
-      } else {
-        setError("Invalid email or password")
-      }
-    } catch {
-      setError("An error occurred. Please try again.")
+      await login(email, password);
+      router.push("/account");
+    } catch (err: any) {
+      setError(err.message || "An error occurred. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
+  }
+  useEffect(() => {
+    if (!loadingUser && user) {
+      router.push("/account");
+    }
+  }, [user, loadingUser, router]);
+
+  if (loadingUser || user) {
+    return <SplashScreen />;
   }
 
   return (
@@ -44,7 +51,7 @@ export function LoginForm() {
         {/* Left - Image */}
         <div className="relative hidden w-5/12 lg:block">
           <Image
-            src="https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1566073771259-6a8506099945_w800.jpg"
+            src="https://www.istockphoto.com/photos/luxury-hotel-exterior"
             alt="Hotel entrance"
             fill
             className="object-cover"
@@ -53,7 +60,8 @@ export function LoginForm() {
           <div className="absolute bottom-8 left-8 right-8">
             <h2 className="font-serif text-2xl text-cream">Welcome Back</h2>
             <p className="mt-2 font-sans text-sm text-cream/70">
-              Sign in to manage your reservations and access exclusive member benefits.
+              Sign in to manage your reservations and access exclusive member
+              benefits.
             </p>
           </div>
         </div>
@@ -75,7 +83,10 @@ export function LoginForm() {
             )}
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email" className="font-sans text-xs uppercase tracking-wider text-muted-foreground">
+              <Label
+                htmlFor="email"
+                className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+              >
                 Email Address
               </Label>
               <Input
@@ -89,7 +100,10 @@ export function LoginForm() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="password" className="font-sans text-xs uppercase tracking-wider text-muted-foreground">
+              <Label
+                htmlFor="password"
+                className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+              >
                 Password
               </Label>
               <div className="relative">
@@ -108,7 +122,11 @@ export function LoginForm() {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  {showPassword ? (
+                    <EyeOff className="size-4" />
+                  ) : (
+                    <Eye className="size-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -133,7 +151,10 @@ export function LoginForm() {
 
             <p className="text-center font-sans text-sm text-muted-foreground">
               {"Don't have an account? "}
-              <Link href="/account/register" className="font-medium text-gold hover:underline">
+              <Link
+                href="/account/register"
+                className="font-medium text-gold hover:underline"
+              >
                 Create one
               </Link>
             </p>
@@ -141,5 +162,5 @@ export function LoginForm() {
         </div>
       </div>
     </main>
-  )
+  );
 }

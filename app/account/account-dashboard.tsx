@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Calendar,
   User,
@@ -13,36 +13,40 @@ import {
   MessageSquare,
   ChevronRight,
   Award,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/contexts/auth-context"
-import { mockBookings } from "@/lib/data/bookings"
-import { rooms } from "@/lib/data/rooms"
-import { formatCurrency } from "@/lib/format"
-import { useSite } from "@/contexts/site-context"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/auth-context";
+import { mockBookings } from "@/lib/data/bookings";
+import { rooms } from "@/lib/data/rooms";
+import { formatCurrency, formatDate } from "@/lib/format";
+import { useSite } from "@/contexts/site-context";
 
 const statusColors: Record<string, string> = {
   confirmed: "bg-green-100 text-green-700",
   "checked-in": "bg-blue-100 text-blue-700",
   "checked-out": "bg-secondary text-muted-foreground",
   cancelled: "bg-destructive/10 text-destructive",
-}
+};
 
 export function AccountDashboard() {
-  const { user, isLoggedIn, logout, toggleFavorite } = useAuth()
-  const { currency } = useSite()
-  const router = useRouter()
+  const { user, isLoggedIn, logout, toggleFavorite } = useAuth();
+  const { currency } = useSite();
+  const router = useRouter();
 
   if (!isLoggedIn || !user) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center bg-background px-4 py-16">
         <div className="flex flex-col items-center gap-4 text-center">
           <User className="size-12 text-muted-foreground/50" />
-          <h1 className="font-serif text-2xl text-foreground">Please Sign In</h1>
-          <p className="font-sans text-sm text-muted-foreground">You need to sign in to access your account.</p>
+          <h1 className="font-serif text-2xl text-foreground">
+            Please Sign In
+          </h1>
+          <p className="font-sans text-sm text-muted-foreground">
+            You need to sign in to access your account.
+          </p>
           <Link href="/account/login">
             <Button className="bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs uppercase tracking-wider">
               Sign In
@@ -50,12 +54,15 @@ export function AccountDashboard() {
           </Link>
         </div>
       </main>
-    )
+    );
   }
-
-  const favoriteRooms = rooms.filter((r) => user.favoriteRooms.includes(r.slug))
-  const upcoming = mockBookings.filter((b) => b.status === "confirmed")
-  const past = mockBookings.filter((b) => b.status === "checked-out")
+  const handleLogout = async () => {
+    await logout();
+    router.push("/account/login/");
+  };
+  // const favoriteRooms = rooms.filter((r) => user.favoriteRooms.includes(r.slug))
+  // const upcoming = mockBookings.filter((b) => b.status === "confirmed")
+  // const past = mockBookings.filter((b) => b.status === "checked-out")
 
   return (
     <main className="bg-background py-12 lg:py-16">
@@ -63,30 +70,30 @@ export function AccountDashboard() {
         {/* Profile Header */}
         <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex size-16 items-center justify-center rounded-full bg-gold/10 font-serif text-xl font-bold text-gold">
-              {user.avatar}
-            </div>
+            <Button variant="ghost" size="sm" className="h-8 gap-2 px-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-md font-medium text-accent-foreground">
+                {user?.full_name?.charAt(0).toUpperCase()}
+              </div>
+         
+            </Button>
             <div>
               <h1 className="font-serif text-2xl text-foreground">
-                {user.firstName} {user.lastName}
+                {user.full_name}
               </h1>
               <div className="mt-1 flex items-center gap-2">
                 <Badge className="bg-gold/10 text-gold hover:bg-gold/20 font-sans text-[10px] uppercase tracking-wider">
                   <Award className="mr-1 size-3" />
-                  {user.loyaltyTier} Member
+                  Gold Member
                 </Badge>
                 <span className="font-sans text-xs text-muted-foreground">
-                  {user.loyaltyPoints.toLocaleString()} points
+                  0 points
                 </span>
               </div>
             </div>
           </div>
           <Button
             variant="outline"
-            onClick={() => {
-              logout()
-              router.push("/")
-            }}
+            onClick={handleLogout}
             className="gap-2 font-sans text-xs uppercase tracking-wider"
           >
             <LogOut className="size-3.5" />
@@ -99,23 +106,32 @@ export function AccountDashboard() {
         {/* Dashboard Tabs */}
         <Tabs defaultValue="bookings" className="w-full">
           <TabsList className="w-full justify-start overflow-x-auto">
-            <TabsTrigger value="bookings" className="gap-1.5 font-sans text-xs uppercase tracking-wider">
+            <TabsTrigger
+              value="bookings"
+              className="gap-1.5 font-sans text-xs uppercase tracking-wider"
+            >
               <Calendar className="size-3.5" />
               My Bookings
             </TabsTrigger>
-            <TabsTrigger value="profile" className="gap-1.5 font-sans text-xs uppercase tracking-wider">
+            <TabsTrigger
+              value="profile"
+              className="gap-1.5 font-sans text-xs uppercase tracking-wider"
+            >
               <User className="size-3.5" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="favorites" className="gap-1.5 font-sans text-xs uppercase tracking-wider">
+            <TabsTrigger
+              value="favorites"
+              className="gap-1.5 font-sans text-xs uppercase tracking-wider"
+            >
               <Heart className="size-3.5" />
               Favorites
             </TabsTrigger>
           </TabsList>
 
           {/* Bookings Tab */}
-          <TabsContent value="bookings" className="mt-6">
-            {/* Upcoming */}
+          {/* <TabsContent value="bookings" className="mt-6">
+  
             <h2 className="font-serif text-xl text-foreground">Upcoming Reservations</h2>
             {upcoming.length === 0 ? (
               <div className="mt-4 rounded-lg border border-dashed border-border/50 bg-secondary/20 p-8 text-center">
@@ -135,7 +151,7 @@ export function AccountDashboard() {
               </div>
             )}
 
-            {/* Past */}
+    
             <h2 className="mt-10 font-serif text-xl text-foreground">Past Stays</h2>
             {past.length === 0 ? (
               <p className="mt-4 font-sans text-sm text-muted-foreground">No past stays yet.</p>
@@ -146,46 +162,61 @@ export function AccountDashboard() {
                 ))}
               </div>
             )}
-          </TabsContent>
+          </TabsContent> */}
 
           {/* Profile Tab */}
           <TabsContent value="profile" className="mt-6">
             <div className="rounded-lg border border-border/50 bg-card p-6 lg:p-8">
-              <h2 className="font-serif text-xl text-foreground">Personal Information</h2>
+              <h2 className="font-serif text-xl text-foreground">
+                Personal Information
+              </h2>
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
-                <InfoField label="First Name" value={user.firstName} />
-                <InfoField label="Last Name" value={user.lastName} />
+                <InfoField label="Full Name" value={user.full_name} />
                 <InfoField label="Email" value={user.email} />
                 <InfoField label="Phone" value={user.phone} />
-                <InfoField label="Nationality" value={user.nationality} />
-                <InfoField label="Member Since" value={user.memberSince} />
+                <InfoField label="Nationality" value={"N/A"} />
+                <InfoField label="Member Since" value={formatDate(user.date_joined)} />
               </div>
 
               <Separator className="my-6" />
 
-              <h3 className="font-sans text-sm font-semibold text-foreground">Loyalty Program</h3>
+              <h3 className="font-sans text-sm font-semibold text-foreground">
+                Loyalty Program
+              </h3>
               <div className="mt-4 grid gap-4 sm:grid-cols-3">
                 <div className="rounded-lg bg-secondary/30 p-4 text-center">
                   <Award className="mx-auto size-5 text-gold" />
-                  <p className="mt-2 font-serif text-lg font-bold text-foreground">{user.loyaltyTier}</p>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">Current Tier</p>
+                  <p className="mt-2 font-serif text-lg font-bold text-foreground">
+                    Gold
+                  </p>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Current Tier
+                  </p>
                 </div>
                 <div className="rounded-lg bg-secondary/30 p-4 text-center">
                   <Star className="mx-auto size-5 text-gold" />
-                  <p className="mt-2 font-serif text-lg font-bold text-foreground">{user.loyaltyPoints.toLocaleString()}</p>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">Points</p>
+                  <p className="mt-2 font-serif text-lg font-bold text-foreground">
+                    0
+                  </p>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Points
+                  </p>
                 </div>
                 <div className="rounded-lg bg-secondary/30 p-4 text-center">
                   <BedDouble className="mx-auto size-5 text-gold" />
-                  <p className="mt-2 font-serif text-lg font-bold text-foreground">{user.totalStays}</p>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">Total Stays</p>
+                  <p className="mt-2 font-serif text-lg font-bold text-foreground">
+                    {user.totalStays}
+                  </p>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
+                    Total Stays
+                  </p>
                 </div>
               </div>
             </div>
           </TabsContent>
 
           {/* Favorites Tab */}
-          <TabsContent value="favorites" className="mt-6">
+          {/* <TabsContent value="favorites" className="mt-6">
             <h2 className="font-serif text-xl text-foreground">Favorite Rooms</h2>
             {favoriteRooms.length === 0 ? (
               <div className="mt-4 rounded-lg border border-dashed border-border/50 bg-secondary/20 p-8 text-center">
@@ -227,11 +258,11 @@ export function AccountDashboard() {
                 ))}
               </div>
             )}
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </div>
     </main>
-  )
+  );
 }
 
 function InfoField({ label, value }: { label: string; value: string }) {
@@ -242,36 +273,57 @@ function InfoField({ label, value }: { label: string; value: string }) {
       </span>
       <p className="mt-0.5 font-sans text-sm text-foreground">{value}</p>
     </div>
-  )
+  );
 }
 
-function BookingCard({ booking, currency }: { booking: (typeof mockBookings)[0]; currency: string }) {
+function BookingCard({
+  booking,
+  currency,
+}: {
+  booking: (typeof mockBookings)[0];
+  currency: string;
+}) {
   return (
     <div className="rounded-lg border border-border/50 bg-card p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <h3 className="font-serif text-lg text-foreground">{booking.roomType}</h3>
-            <Badge className={`${statusColors[booking.status]} font-sans text-[10px] uppercase tracking-wider`}>
+            <h3 className="font-serif text-lg text-foreground">
+              {booking.roomType}
+            </h3>
+            <Badge
+              className={`${statusColors[booking.status]} font-sans text-[10px] uppercase tracking-wider`}
+            >
               {booking.status}
             </Badge>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
             <span className="font-mono text-xs">{booking.reference}</span>
-            <span className="font-sans text-xs">{booking.checkIn} to {booking.checkOut}</span>
+            <span className="font-sans text-xs">
+              {booking.checkIn} to {booking.checkOut}
+            </span>
             <span className="font-sans text-xs">{booking.nights} nights</span>
-            <span className="font-sans text-xs">{booking.adults} adults{booking.children > 0 ? `, ${booking.children} children` : ""}</span>
+            <span className="font-sans text-xs">
+              {booking.adults} adults
+              {booking.children > 0 ? `, ${booking.children} children` : ""}
+            </span>
           </div>
           {booking.specialRequests && (
             <div className="flex items-start gap-1.5 text-muted-foreground">
               <MessageSquare className="mt-0.5 size-3" />
-              <span className="font-sans text-xs">{booking.specialRequests}</span>
+              <span className="font-sans text-xs">
+                {booking.specialRequests}
+              </span>
             </div>
           )}
           {booking.addOns.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {booking.addOns.map((addon) => (
-                <Badge key={addon} variant="outline" className="font-sans text-[10px]">
+                <Badge
+                  key={addon}
+                  variant="outline"
+                  className="font-sans text-[10px]"
+                >
                   {addon}
                 </Badge>
               ))}
@@ -280,16 +332,29 @@ function BookingCard({ booking, currency }: { booking: (typeof mockBookings)[0];
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="font-serif text-xl font-bold text-foreground">
-            {formatCurrency(booking.total, currency as "USD" | "EUR" | "GBP" | "AED")}
+            {formatCurrency(
+              booking.total,
+              currency as "USD" | "EUR" | "GBP" | "AED",
+            )}
           </p>
-          <span className="font-sans text-[10px] text-muted-foreground">{booking.paymentMethod}</span>
+          <span className="font-sans text-[10px] text-muted-foreground">
+            {booking.paymentMethod}
+          </span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="gap-1 font-sans text-[10px] uppercase tracking-wider">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1 font-sans text-[10px] uppercase tracking-wider"
+            >
               <Download className="size-3" />
               Invoice
             </Button>
             {booking.status === "confirmed" && (
-              <Button variant="outline" size="sm" className="font-sans text-[10px] uppercase tracking-wider text-destructive hover:text-destructive">
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-sans text-[10px] uppercase tracking-wider text-destructive hover:text-destructive"
+              >
                 Cancel
               </Button>
             )}
@@ -297,5 +362,5 @@ function BookingCard({ booking, currency }: { booking: (typeof mockBookings)[0];
         </div>
       </div>
     </div>
-  )
+  );
 }
