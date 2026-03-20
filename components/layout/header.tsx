@@ -72,7 +72,7 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            <Link href="/account/login" className="hidden lg:block">
+            <Link href="/account/" className="hidden lg:block">
               <Button variant="ghost" size="icon-sm">
                 <User className="size-4" />
                 <span className="sr-only">Account</span>

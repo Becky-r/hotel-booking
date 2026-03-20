@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import * as api from "@/lib/api";
+import { getUserBookings } from "@/lib/api";
 
 export interface GuestUser {
   id: string;
@@ -39,6 +40,8 @@ interface AuthContextType {
   logout: () => void;
   toggleFavorite: (roomSlug: string) => void;
   loadingUser: boolean;
+  bookings: any[];
+  setBookings: (bookings: any[]) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -46,7 +49,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<GuestUser | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
-
+  const [bookings, setBookings] = useState<any[]>([]);
   // On initial app load, try to fetch user if token exists
   useEffect(() => {
     async function fetchUser() {
@@ -54,21 +57,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const fetchedUser = await api.getUser();
         setUser(fetchedUser);
-        console.log("User fetched on app load:", fetchedUser);
       } catch {
         setUser(null); // user not logged in
       } finally {
         setLoadingUser(false);
       }
     }
-
     fetchUser();
+    fetchUserBookings();
   }, []);
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
     await api.login(email, password);
     const fetchedUser = await api.getUser();
+    const bookings = await getUserBookings();
+    setBookings(bookings);
     setUser(fetchedUser);
   }, []);
 
@@ -93,7 +97,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await api.logout();
     setUser(null);
   }, []);
-
+  const fetchUserBookings = async () => {
+    try {
+      const response = await getUserBookings();
+      setBookings(response);
+    } catch (err) {
+      console.error("Error fetching user bookings:", err);
+    }
+  };
   // FAVORITES
   const toggleFavorite = useCallback((roomSlug: string) => {
     setUser((prev) => {
@@ -118,6 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         toggleFavorite,
         loadingUser,
+        bookings,
+        setBookings,
       }}
     >
       {children}

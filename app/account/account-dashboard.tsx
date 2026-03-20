@@ -23,6 +23,15 @@ import { mockBookings } from "@/lib/data/bookings";
 import { rooms } from "@/lib/data/rooms";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useSite } from "@/contexts/site-context";
+import { cancelBooking, getUserBookings } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { BookingCard } from "@/components/booking/BookingCard";
+import { InfoField } from "@/components/booking/dashboard/InfoField";
+import { ProfileHeader } from "@/components/booking/dashboard/ProfileHeader";
+import { GuestBookingLookup } from "@/components/booking/dashboard/GuestBookingLookup";
+import { ref } from "process";
+import { toast } from "sonner";
+import { SplashScreen } from "@/components/layout/splash-screen";
 
 const statusColors: Record<string, string> = {
   confirmed: "bg-green-100 text-green-700",
@@ -32,74 +41,78 @@ const statusColors: Record<string, string> = {
 };
 
 export function AccountDashboard() {
-  const { user, isLoggedIn, logout, toggleFavorite } = useAuth();
+  const { user, isLoggedIn , loadingUser, logout, bookings, setBookings } = useAuth();
   const { currency } = useSite();
   const router = useRouter();
+  const now = new Date();
 
-  if (!isLoggedIn || !user) {
+  const upcoming = bookings.filter((b) => new Date(b.check_in) >= now);
+
+  const past = bookings.filter((b) => new Date(b.check_out) < now);
+
+  const totalStays = bookings.filter((b) => new Date(b.check_out) < now).length;
+
+  if (loadingUser) {
+    return <SplashScreen />;}
+
+  if ((!isLoggedIn || !user)  ) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center bg-background px-4 py-16">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <User className="size-12 text-muted-foreground/50" />
-          <h1 className="font-serif text-2xl text-foreground">
-            Please Sign In
-          </h1>
-          <p className="font-sans text-sm text-muted-foreground">
-            You need to sign in to access your account.
-          </p>
-          <Link href="/account/login">
-            <Button className="bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs uppercase tracking-wider">
-              Sign In
-            </Button>
-          </Link>
+        <div className="w-full max-w-md space-y-8">
+          {/* SIGN IN SECTION */}
+          <div className="flex flex-col items-center gap-4 text-center">
+            <User className="size-12 text-muted-foreground/50" />
+
+            <h1 className="font-serif text-2xl text-foreground">
+              Access Your Account
+            </h1>
+
+            <p className="font-sans text-sm text-muted-foreground">
+              Sign in to manage your bookings, or find a reservation using your
+              reference number.
+            </p>
+
+            <Link href="/account/login">
+              <Button className="bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs uppercase tracking-wider">
+                Sign In
+              </Button>
+            </Link>
+          </div>
+
+          {/* DIVIDER */}
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground">OR</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          {/* GUEST LOOKUP */}
+          <GuestBookingLookup />
         </div>
       </main>
     );
   }
   const handleLogout = async () => {
     await logout();
-    router.push("/account/login/");
+    router.push("/account/");
   };
-  // const favoriteRooms = rooms.filter((r) => user.favoriteRooms.includes(r.slug))
-  // const upcoming = mockBookings.filter((b) => b.status === "confirmed")
-  // const past = mockBookings.filter((b) => b.status === "checked-out")
+  const handleCancel = async (reference: string) => {
+    try {
+      const response = await cancelBooking(reference);
+      const updatedBookings = bookings.map((booking) =>
+        booking.reference === reference ? response : booking,
+      );
+      setBookings(updatedBookings);
+    } catch (err) {
+      toast.error(err.message || "Couldn't cancel booking. Please try again.");
+    }
+  };
 
   return (
     <main className="bg-background py-12 lg:py-16">
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
         {/* Profile Header */}
-        <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="h-8 gap-2 px-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-md font-medium text-accent-foreground">
-                {user?.full_name?.charAt(0).toUpperCase()}
-              </div>
-         
-            </Button>
-            <div>
-              <h1 className="font-serif text-2xl text-foreground">
-                {user.full_name}
-              </h1>
-              <div className="mt-1 flex items-center gap-2">
-                <Badge className="bg-gold/10 text-gold hover:bg-gold/20 font-sans text-[10px] uppercase tracking-wider">
-                  <Award className="mr-1 size-3" />
-                  Gold Member
-                </Badge>
-                <span className="font-sans text-xs text-muted-foreground">
-                  0 points
-                </span>
-              </div>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            onClick={handleLogout}
-            className="gap-2 font-sans text-xs uppercase tracking-wider"
-          >
-            <LogOut className="size-3.5" />
-            Sign Out
-          </Button>
-        </div>
+        <ProfileHeader user={user} handleLogout={handleLogout} />
 
         <Separator className="my-8" />
 
@@ -120,23 +133,20 @@ export function AccountDashboard() {
               <User className="size-3.5" />
               Profile
             </TabsTrigger>
-            <TabsTrigger
-              value="favorites"
-              className="gap-1.5 font-sans text-xs uppercase tracking-wider"
-            >
-              <Heart className="size-3.5" />
-              Favorites
-            </TabsTrigger>
           </TabsList>
 
           {/* Bookings Tab */}
-          {/* <TabsContent value="bookings" className="mt-6">
-  
-            <h2 className="font-serif text-xl text-foreground">Upcoming Reservations</h2>
+          <TabsContent value="bookings" className="mt-6">
+            <h2 className="font-serif text-xl text-foreground">
+              Upcoming Reservations
+            </h2>
+
             {upcoming.length === 0 ? (
               <div className="mt-4 rounded-lg border border-dashed border-border/50 bg-secondary/20 p-8 text-center">
                 <Calendar className="mx-auto size-8 text-muted-foreground/50" />
-                <p className="mt-3 font-sans text-sm text-muted-foreground">No upcoming reservations</p>
+                <p className="mt-3 font-sans text-sm text-muted-foreground">
+                  No upcoming reservations
+                </p>
                 <Link href="/booking">
                   <Button className="mt-4 bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs uppercase tracking-wider">
                     Book a Stay
@@ -146,23 +156,39 @@ export function AccountDashboard() {
             ) : (
               <div className="mt-4 flex flex-col gap-4">
                 {upcoming.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} currency={currency} />
+                  <BookingCard
+                    key={booking.reference}
+                    booking={booking}
+                    currency="USD"
+                    handleCancel={() => handleCancel(booking.reference)}
+                  />
                 ))}
               </div>
             )}
 
-    
-            <h2 className="mt-10 font-serif text-xl text-foreground">Past Stays</h2>
+            {/* PAST */}
+            <h2 className="mt-10 font-serif text-xl text-foreground">
+              Past Stays
+            </h2>
+
             {past.length === 0 ? (
-              <p className="mt-4 font-sans text-sm text-muted-foreground">No past stays yet.</p>
+              <p className="mt-4 font-sans text-sm text-muted-foreground">
+                No past stays yet.
+              </p>
             ) : (
               <div className="mt-4 flex flex-col gap-4">
                 {past.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} currency={currency} />
+                  <div key={booking.reference} className="opacity-80">
+                    <BookingCard
+                      booking={booking}
+                      currency="USD"
+                      isCancellable={false}
+                    />
+                  </div>
                 ))}
               </div>
             )}
-          </TabsContent> */}
+          </TabsContent>
 
           {/* Profile Tab */}
           <TabsContent value="profile" className="mt-6">
@@ -175,7 +201,10 @@ export function AccountDashboard() {
                 <InfoField label="Email" value={user.email} />
                 <InfoField label="Phone" value={user.phone} />
                 <InfoField label="Nationality" value={"N/A"} />
-                <InfoField label="Member Since" value={formatDate(user.date_joined)} />
+                <InfoField
+                  label="Member Since"
+                  value={formatDate(user.date_joined)}
+                />
               </div>
 
               <Separator className="my-6" />
@@ -196,7 +225,7 @@ export function AccountDashboard() {
                 <div className="rounded-lg bg-secondary/30 p-4 text-center">
                   <Star className="mx-auto size-5 text-gold" />
                   <p className="mt-2 font-serif text-lg font-bold text-foreground">
-                    0
+                    {totalStays * 100}
                   </p>
                   <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
                     Points
@@ -205,7 +234,7 @@ export function AccountDashboard() {
                 <div className="rounded-lg bg-secondary/30 p-4 text-center">
                   <BedDouble className="mx-auto size-5 text-gold" />
                   <p className="mt-2 font-serif text-lg font-bold text-foreground">
-                    {user.totalStays}
+                    {totalStays}
                   </p>
                   <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground">
                     Total Stays
@@ -214,153 +243,8 @@ export function AccountDashboard() {
               </div>
             </div>
           </TabsContent>
-
-          {/* Favorites Tab */}
-          {/* <TabsContent value="favorites" className="mt-6">
-            <h2 className="font-serif text-xl text-foreground">Favorite Rooms</h2>
-            {favoriteRooms.length === 0 ? (
-              <div className="mt-4 rounded-lg border border-dashed border-border/50 bg-secondary/20 p-8 text-center">
-                <Heart className="mx-auto size-8 text-muted-foreground/50" />
-                <p className="mt-3 font-sans text-sm text-muted-foreground">No favorite rooms yet</p>
-                <Link href="/rooms">
-                  <Button variant="outline" className="mt-4 font-sans text-xs uppercase tracking-wider">
-                    Explore Rooms
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {favoriteRooms.map((room) => (
-                  <div key={room.id} className="rounded-lg border border-border/50 bg-card p-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-serif text-base text-foreground">{room.name}</h3>
-                        <p className="font-sans text-xs text-muted-foreground">
-                          From {formatCurrency(room.basePrice, currency)}/night
-                        </p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => toggleFavorite(room.slug)}
-                        aria-label="Remove from favorites"
-                      >
-                        <Heart className="size-4 fill-gold text-gold" />
-                      </Button>
-                    </div>
-                    <Link href={`/rooms/${room.slug}`}>
-                      <Button variant="outline" size="sm" className="mt-3 w-full gap-1 font-sans text-xs uppercase tracking-wider">
-                        View Room
-                        <ChevronRight className="size-3" />
-                      </Button>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            )}
-          </TabsContent> */}
         </Tabs>
       </div>
     </main>
-  );
-}
-
-function InfoField({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-        {label}
-      </span>
-      <p className="mt-0.5 font-sans text-sm text-foreground">{value}</p>
-    </div>
-  );
-}
-
-function BookingCard({
-  booking,
-  currency,
-}: {
-  booking: (typeof mockBookings)[0];
-  currency: string;
-}) {
-  return (
-    <div className="rounded-lg border border-border/50 bg-card p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <h3 className="font-serif text-lg text-foreground">
-              {booking.roomType}
-            </h3>
-            <Badge
-              className={`${statusColors[booking.status]} font-sans text-[10px] uppercase tracking-wider`}
-            >
-              {booking.status}
-            </Badge>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
-            <span className="font-mono text-xs">{booking.reference}</span>
-            <span className="font-sans text-xs">
-              {booking.checkIn} to {booking.checkOut}
-            </span>
-            <span className="font-sans text-xs">{booking.nights} nights</span>
-            <span className="font-sans text-xs">
-              {booking.adults} adults
-              {booking.children > 0 ? `, ${booking.children} children` : ""}
-            </span>
-          </div>
-          {booking.specialRequests && (
-            <div className="flex items-start gap-1.5 text-muted-foreground">
-              <MessageSquare className="mt-0.5 size-3" />
-              <span className="font-sans text-xs">
-                {booking.specialRequests}
-              </span>
-            </div>
-          )}
-          {booking.addOns.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {booking.addOns.map((addon) => (
-                <Badge
-                  key={addon}
-                  variant="outline"
-                  className="font-sans text-[10px]"
-                >
-                  {addon}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <p className="font-serif text-xl font-bold text-foreground">
-            {formatCurrency(
-              booking.total,
-              currency as "USD" | "EUR" | "GBP" | "AED",
-            )}
-          </p>
-          <span className="font-sans text-[10px] text-muted-foreground">
-            {booking.paymentMethod}
-          </span>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-1 font-sans text-[10px] uppercase tracking-wider"
-            >
-              <Download className="size-3" />
-              Invoice
-            </Button>
-            {booking.status === "confirmed" && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="font-sans text-[10px] uppercase tracking-wider text-destructive hover:text-destructive"
-              >
-                Cancel
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

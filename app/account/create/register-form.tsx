@@ -44,13 +44,7 @@ export function RegisterForm() {
       setError("Password must be at least 8 characters");
       return;
     }
-    console.log("Submitting registration with data:", {
-      full_name: `${form.firstName.trim()} ${form.lastName.trim()}`,
-      email: form.email,
-      phone: form.phone,
-      password: form.password,
-      password2: form.confirmPassword,
-    });
+
     setLoading(true);
 
     try {

@@ -127,7 +127,7 @@ export async function uploadPaymentScreenshot(
 
 export async function anonCancelBooking(data: {
   reference: string;
-  email: string;
+  phone: string;
 }) {
   return apiRequest<any>("POST", "/booking/anon-cancel/", data);
 }

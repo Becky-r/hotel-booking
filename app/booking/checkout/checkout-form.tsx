@@ -196,16 +196,7 @@ export function CheckoutForm() {
                     setFormData({ ...formData, tin_number: e.target.value })
                   }
                 />
-                {/* <Input
-                  placeholder="Custom Amount"
-                  value={formData.package_user_amount}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      package_user_amount: e.target.value,
-                    })
-                  }
-                /> */}
+             
               </div>
             </div>
             {/* ENHANCE YOUR STAY */}
