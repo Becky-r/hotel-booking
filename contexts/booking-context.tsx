@@ -1,59 +1,62 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react";
+
+/* =========================
+   TYPES
+========================= */
 
 export interface SelectedRoom {
-  roomId: string
-  quantity: number
+  room_type: number;
+  quantity: number;
 }
 
 export interface BookingState {
-  checkIn: Date | undefined
-  checkOut: Date | undefined
-  adults: number
-  children: number
+  checkIn?: Date;
+  checkOut?: Date;
+  adults: number;
+  children: number;
 
-  selectedRooms: SelectedRoom[]
+  rooms: SelectedRoom[];
 
-  addOns: string[]
-  promoCode: string
-  promoDiscount: number
+  services: number[];
 
   guestDetails: {
-    firstName: string
-    lastName: string
-    email: string
-    phone: string
-    specialRequests: string
-  }
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
 
-  paymentMethod: "credit-card" | "pay-at-hotel"
+  company?: string;
+  tin_number?: string;
+  package_user_amount?: string;
 }
 
 interface BookingContextValue {
-  booking: BookingState
+  booking: BookingState;
 
-  setCheckIn: (d: Date | undefined) => void
-  setCheckOut: (d: Date | undefined) => void
-  setAdults: (n: number) => void
-  setChildren: (n: number) => void
+  setCheckIn: (d?: Date) => void;
+  setCheckOut: (d?: Date) => void;
+  setAdults: (n: number) => void;
+  setChildren: (n: number) => void;
 
-  selectedRooms: SelectedRoom[]
+  rooms: SelectedRoom[];
+  isRoomSelected: (room_type: number) => boolean;
+  updateRoomQuantity: (room_type: number, quantity: number) => void;
+  getRoomQuantity: (room_type: number) => number;
+  toggleRoomSelection: (room_type: number, checked: boolean) => void;
 
-  updateRoomQuantity: (roomId: string, quantity: number) => void
-  getRoomQuantity: (roomId: string) => number
+  toggleService: (id: number) => void;
 
-  isRoomSelected: (roomId: string) => boolean
-  toggleRoomSelection: (roomId: string, checked: boolean) => void
+  setGuestDetails: (details: BookingState["guestDetails"]) => void;
 
-  toggleAddOn: (id: string) => void
-  setPromoCode: (code: string) => void
-  setPromoDiscount: (d: number) => void
-  setGuestDetails: (details: BookingState["guestDetails"]) => void
-  setPaymentMethod: (m: BookingState["paymentMethod"]) => void
-
-  resetBooking: () => void
+  resetBooking: () => void;
 }
+
+/* =========================
+   DEFAULT STATE
+========================= */
 
 const defaultBooking: BookingState = {
   checkIn: undefined,
@@ -61,101 +64,110 @@ const defaultBooking: BookingState = {
   adults: 2,
   children: 0,
 
-  selectedRooms: [],
-
-  addOns: [],
-  promoCode: "",
-  promoDiscount: 0,
+  rooms: [],
+  services: [],
 
   guestDetails: {
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    specialRequests: "",
   },
 
-  paymentMethod: "credit-card",
-}
+  company: "",
+  tin_number: "",
+  package_user_amount: "",
+};
 
-const BookingContext = createContext<BookingContextValue | null>(null)
+/* =========================
+   CONTEXT
+========================= */
+
+const BookingContext = createContext<BookingContextValue | null>(null);
+
+/* =========================
+   PROVIDER
+========================= */
 
 export function BookingProvider({ children }: { children: ReactNode }) {
-  const [booking, setBooking] = useState<BookingState>(defaultBooking)
+  const [booking, setBooking] = useState<BookingState>(defaultBooking);
 
-  const setCheckIn = (d: Date | undefined) =>
-    setBooking((s) => ({ ...s, checkIn: d }))
+  /* ---------- BASIC SETTERS ---------- */
 
-  const setCheckOut = (d: Date | undefined) =>
-    setBooking((s) => ({ ...s, checkOut: d }))
+  const setCheckIn = (d?: Date) =>
+    setBooking((s) => ({ ...s, checkIn: d }));
+
+  const setCheckOut = (d?: Date) =>
+    setBooking((s) => ({ ...s, checkOut: d }));
 
   const setAdults = (n: number) =>
-    setBooking((s) => ({ ...s, adults: n }))
+    setBooking((s) => ({ ...s, adults: n }));
 
   const setChildren = (n: number) =>
-    setBooking((s) => ({ ...s, children: n }))
+    setBooking((s) => ({ ...s, children: n }));
 
-  const updateRoomQuantity = (roomId: string, quantity: number) => {
+  /* ---------- ROOMS ---------- */
+
+  const isRoomSelected = (room_type: number) => {
+    return booking.rooms.some((r) => r.room_type === room_type);
+  };
+
+  const updateRoomQuantity = (room_type: number, quantity: number) => {
     setBooking((s) => {
-      const others = s.selectedRooms.filter((r) => r.roomId !== roomId)
+      const others = s.rooms.filter((r) => r.room_type !== room_type);
 
       if (quantity <= 0) {
-        return { ...s, selectedRooms: others }
+        return { ...s, rooms: others };
       }
 
       return {
         ...s,
-        selectedRooms: [...others, { roomId, quantity }],
-      }
-    })
-  }
+        rooms: [...others, { room_type, quantity }],
+      };
+    });
+  };
 
-  const getRoomQuantity = (roomId: string) => {
-    const found = booking.selectedRooms.find((r) => r.roomId === roomId)
-    return found ? found.quantity : 0
-  }
+  const getRoomQuantity = (room_type: number) => {
+    const found = booking.rooms.find((r) => r.room_type === room_type);
+    return found ? found.quantity : 0;
+  };
 
-  const isRoomSelected = (roomId: string) => {
-    return booking.selectedRooms.some((r) => r.roomId === roomId)
-  }
-
-  const toggleRoomSelection = (roomId: string, checked: boolean) => {
+  const toggleRoomSelection = (room_type: number, checked: boolean) => {
     setBooking((s) => {
       if (!checked) {
         return {
           ...s,
-          selectedRooms: s.selectedRooms.filter((r) => r.roomId !== roomId),
-        }
+          rooms: s.rooms.filter((r) => r.room_type !== room_type),
+        };
       }
 
       return {
         ...s,
-        selectedRooms: [...s.selectedRooms, { roomId, quantity: 1 }],
-      }
-    })
-  }
+        rooms: [...s.rooms, { room_type, quantity: 1 }],
+      };
+    });
+  };
 
-  const toggleAddOn = (id: string) =>
+  /* ---------- SERVICES ---------- */
+
+  const toggleService = (id: number) =>
     setBooking((s) => ({
       ...s,
-      addOns: s.addOns.includes(id)
-        ? s.addOns.filter((a) => a !== id)
-        : [...s.addOns, id],
-    }))
+      services: s.services.includes(id)
+        ? s.services.filter((x) => x !== id)
+        : [...s.services, id],
+    }));
 
-  const setPromoCode = (code: string) =>
-    setBooking((s) => ({ ...s, promoCode: code }))
-
-  const setPromoDiscount = (d: number) =>
-    setBooking((s) => ({ ...s, promoDiscount: d }))
+  /* ---------- GUEST ---------- */
 
   const setGuestDetails = (details: BookingState["guestDetails"]) =>
-    setBooking((s) => ({ ...s, guestDetails: details }))
+    setBooking((s) => ({ ...s, guestDetails: details }));
 
-  const setPaymentMethod = (m: BookingState["paymentMethod"]) =>
-    setBooking((s) => ({ ...s, paymentMethod: m }))
+  /* ---------- RESET ---------- */
 
-  const resetBooking = () => setBooking(defaultBooking)
+  const resetBooking = () => setBooking(defaultBooking);
+
+  /* ========================= */
 
   return (
     <BookingContext.Provider
@@ -167,33 +179,35 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         setAdults,
         setChildren,
 
-        selectedRooms: booking.selectedRooms,
+        rooms: booking.rooms,
 
+        isRoomSelected,
         updateRoomQuantity,
         getRoomQuantity,
-        isRoomSelected,
         toggleRoomSelection,
 
-        toggleAddOn,
-        setPromoCode,
-        setPromoDiscount,
+        toggleService,
+
         setGuestDetails,
-        setPaymentMethod,
 
         resetBooking,
       }}
     >
       {children}
     </BookingContext.Provider>
-  )
+  );
 }
+
+/* =========================
+   HOOK
+========================= */
 
 export function useBooking() {
-  const ctx = useContext(BookingContext)
+  const ctx = useContext(BookingContext);
 
   if (!ctx) {
-    throw new Error("useBooking must be used within BookingProvider")
+    throw new Error("useBooking must be used within BookingProvider");
   }
 
-  return ctx
-}
+  return ctx;
+} 

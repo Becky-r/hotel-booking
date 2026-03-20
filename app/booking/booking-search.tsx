@@ -1,16 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import Link from "next/link";
-import { format, set } from "date-fns";
-import {
-  CalendarDays,
-  Users,
-  BedDouble,
-  Maximize,
-  ArrowRight,
-} from "lucide-react";
+import { CalendarDays, Users, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,14 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 
 import { useBooking } from "@/contexts/booking-context";
 import { useSite } from "@/contexts/site-context";
-
-import { rooms } from "@/lib/data/rooms";
-import { calculateStayPrice } from "@/lib/booking-utils";
+import { availableRooms as fetchAvailableRooms } from "@/lib/api";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -44,8 +33,7 @@ export function BookingSearch() {
     setCheckOut,
     setAdults,
     setChildren,
-
-    selectedRooms,
+    rooms,
     getRoomQuantity,
     updateRoomQuantity,
     toggleRoomSelection,
@@ -55,35 +43,57 @@ export function BookingSearch() {
   const { currency } = useSite();
 
   const [searched, setSearched] = useState(false);
+  const [roomsData, setRoomsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const hasDate = booking.checkIn && booking.checkOut;
 
-  const handleSearch = () => setSearched(true);
+  // 🔍 SEARCH API CALL
+  const handleSearch = async () => {
+    if (!booking.checkIn || !booking.checkOut) return;
+    if (booking.checkOut <= booking.checkIn) return;
 
-  const availableRooms = rooms.filter(
-    (room) => room.maxAdults >= booking.adults,
-  );
+    setLoading(true);
 
-  const totalRooms = selectedRooms.reduce((sum, r) => sum + r.quantity, 0);
-  const totalTypes = selectedRooms.length;
+    try {
+      const data = await fetchAvailableRooms({
+        check_in: format(booking.checkIn, "yyyy-MM-dd"),
+        check_out: format(booking.checkOut, "yyyy-MM-dd"),
+        adults: booking.adults,
+        children: booking.children,
+      });
+      console.log(data);
+
+      setRoomsData(data);
+      setSearched(true);
+    } catch (err) {
+      console.error("Error fetching rooms:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const totalRooms = rooms.reduce((sum, r) => sum + r.quantity, 0);
+  const totalTypes = rooms.length;
+
   const handleClearSelection = () => {
-    selectedRooms.forEach((r) => updateRoomQuantity(r.roomId, 0));
+    rooms.forEach((r) => updateRoomQuantity(r.room_type, 0));
     setSearched(false);
     setCheckIn(undefined);
     setCheckOut(undefined);
     setAdults(1);
     setChildren(0);
-  }
-
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [booking.checkIn, booking.checkOut, booking.adults, booking.children]);
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
-        {/* SEARCH BAR */}
-
+        {/* 🔍 SEARCH BAR */}
         <div className="sticky top-20 z-50 rounded-lg border border-border/50 bg-card p-6 shadow-sm">
           <div className="grid gap-4 md:grid-cols-5">
             {/* CHECK IN */}
-
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Check-in
@@ -99,7 +109,6 @@ export function BookingSearch() {
                     )}
                   >
                     <CalendarDays className="size-4 text-gold" />
-
                     {booking.checkIn
                       ? format(booking.checkIn, "MMM d, yyyy")
                       : "Select date"}
@@ -118,7 +127,6 @@ export function BookingSearch() {
             </div>
 
             {/* CHECK OUT */}
-
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Check-out
@@ -134,7 +142,6 @@ export function BookingSearch() {
                     )}
                   >
                     <CalendarDays className="size-4 text-gold" />
-
                     {booking.checkOut
                       ? format(booking.checkOut, "MMM d, yyyy")
                       : "Select date"}
@@ -153,7 +160,6 @@ export function BookingSearch() {
             </div>
 
             {/* ADULTS */}
-
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Adults
@@ -178,7 +184,6 @@ export function BookingSearch() {
             </div>
 
             {/* CHILDREN */}
-
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase text-muted-foreground">
                 Children
@@ -203,22 +208,23 @@ export function BookingSearch() {
             </div>
 
             {/* SEARCH BUTTON */}
-
             <div className="flex flex-col justify-end">
               <Button
                 onClick={handleSearch}
+                disabled={loading}
                 className="bg-gold text-charcoal hover:bg-gold-dark"
               >
-                Search
+                {loading ? "Searching..." : "Search"}
               </Button>
             </div>
-            {selectedRooms.length > 0 && (
+
+            {rooms.length > 0 && (
               <div className="flex flex-col justify-end">
                 <Button
                   onClick={handleClearSelection}
                   className="bg-gold text-charcoal hover:bg-gold-dark"
                 >
-                  Clear All Selected
+                  Clear All
                 </Button>
               </div>
             )}
@@ -226,141 +232,132 @@ export function BookingSearch() {
         </div>
 
         {/* RESULTS */}
-
         {searched && (
           <div className="mt-8">
             <h2 className="text-2xl font-bold">
-              {hasDate ? "Available Rooms" : "Select dates to see pricing"}
+              {hasDate ? "Available Rooms" : "Select dates"}
             </h2>
 
             <p className="text-sm text-muted-foreground">
-              {availableRooms.length} room types
+              {roomsData.length} room types
             </p>
 
-            <div className="mt-6 flex flex-col gap-4">
-              {availableRooms.map((room) => {
-                const quantity = getRoomQuantity(room.id);
-                const selected = isRoomSelected(room.id);
+            <div className="mt-6 flex flex-col gap-5">
+              {roomsData.map((room) => {
+                const quantity = getRoomQuantity(room.room_type_id);
+                const selected = isRoomSelected(room.room_type_id);
 
-                const pricing = hasDate
-                  ? calculateStayPrice(
-                      room,
-                      booking.checkIn!,
-                      booking.checkOut!,
-                    )
-                  : null;
+                const imageUrl =
+                  room.images?.[0]?.image ||
+                  "https://blocks.astratic.com/img/general-img-landscape.png";
 
                 return (
                   <div
-                    key={room.id}
-                    onClick={() => toggleRoomSelection(room.id, !selected)}
+                    key={room.room_type_id}
+                    onClick={() =>
+                      toggleRoomSelection(room.room_type_id, !selected)
+                    }
                     className={cn(
-                      "flex flex-col sm:flex-row rounded-lg border bg-card overflow-hidden relative transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg cursor-pointer group",
-                      selected
-                        ? "ring-1 ring-gold"
-                        : "border-border/50",
+                      "flex flex-col sm:flex-row overflow-hidden rounded-lg border bg-card transition-all duration-200 hover:shadow-lg cursor-pointer group",
+                      selected ? "ring-1 ring-gold" : "border-border/50",
                     )}
                   >
-                    {/* HOVER CHECKBOX */}
-                    <div
-                      className={cn(
-                        "absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-                        selected
-                          ? "bg-gold border-gold"
-                          : "border-gray-300 bg-white opacity-2 group-hover:opacity-100",
-                      )}
-                    >
-                      {selected && (
-                        <div className="w-3 h-3 rounded-full bg-white" />
-                      )}
-                    </div>
-
                     {/* IMAGE */}
-                    <div className="relative sm:w-48 aspect-[4/3]">
-                      <Image
-                        src={room.images[0]}
+                    <div className="relative sm:w-56 h-44 sm:h-auto overflow-hidden">
+                      <img
+                        src={imageUrl}
                         alt={room.name}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
 
                     {/* CONTENT */}
-                    <div className="flex flex-1 justify-between p-4">
+                    <div className="flex flex-1 justify-between p-4 items-center">
                       {/* LEFT SIDE */}
                       <div>
                         <h3 className="text-lg font-bold">{room.name}</h3>
 
-                        <div className="flex gap-3 text-xs text-muted-foreground mt-1">
-                          <span className="flex gap-1 items-center">
-                            <BedDouble className="size-3" /> {room.bedType}
-                          </span>
-                          <span className="flex gap-1 items-center">
-                            <Users className="size-3" /> {room.maxAdults} guests
-                          </span>
-                          <span className="flex gap-1 items-center">
-                            <Maximize className="size-3" /> {room.size} sqft
-                          </span>
-                        </div>
+                        <div className="text-sm text-muted-foreground mt-2 space-y-1">
+                          <p className="flex items-center gap-1">
+                            <Users className="size-3" />
+                            {room.capacity} guests
+                          </p>
 
-                        {room.featured && (
-                          <Badge className="mt-2 text-xs">Popular Choice</Badge>
-                        )}
+                          <p>
+                            Available:{" "}
+                            <span className="font-medium">
+                              {room.available_rooms}
+                            </span>
+                          </p>
+                        </div>
                       </div>
 
-                      {/* RIGHT SIDE (Pricing + Quantity) */}
-                      <div className="flex items-center gap-4">
+                      {/* RIGHT SIDE */}
+                      <div className="flex flex-col items-end gap-3">
+                        {/* PRICE */}
                         <div className="text-right">
-                          {pricing ? (
-                            <>
-                              <p className="text-xl font-bold">
-                                {formatCurrency(pricing.total, currency)}
-                              </p>
-                              <span className="text-xs text-muted-foreground">
-                                {pricing.nights} nights
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <p className="text-xl font-bold">
-                                {formatCurrency(room.basePrice, currency)}
-                              </p>
-                              <span className="text-xs text-muted-foreground">
-                                per night
-                              </span>
-                            </>
-                          )}
+                          <p className="text-xl font-bold">
+                            {formatCurrency(room.price, currency)}
+                          </p>
+                          <span className="text-xs text-muted-foreground">
+                            per night
+                          </span>
                         </div>
 
-                        {/* QUANTITY */}
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            disabled={!selected || quantity === 0}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateRoomQuantity(room.id, quantity - 1);
-                            }}
-                          >
-                            -
-                          </Button>
+                        {/* QUANTITY + SELECT CIRCLE */}
+                        <div className="flex items-center gap-3">
+                          {/* QUANTITY */}
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              disabled={!selected || quantity === 0}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateRoomQuantity(
+                                  room.room_type_id,
+                                  quantity - 1,
+                                );
+                              }}
+                            >
+                              -
+                            </Button>
 
-                          <span className="w-6 text-center">
-                            {selected ? quantity : "-"}
-                          </span>
+                            <span className="w-6 text-center">
+                              {selected ? quantity : "-"}
+                            </span>
 
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            disabled={!selected}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateRoomQuantity(room.id, quantity + 1);
-                            }}
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              disabled={
+                                !selected || quantity >= room.available_rooms
+                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateRoomQuantity(
+                                  room.room_type_id,
+                                  quantity + 1,
+                                );
+                              }}
+                            >
+                              +
+                            </Button>
+                          </div>
+
+                          {/* CIRCULAR SELECT */}
+                          <div
+                            className={cn(
+                              "w-6 h-6 rounded-full border-2 flex items-center justify-center transition",
+                              selected
+                                ? "bg-gold border-gold"
+                                : "bg-white border-gray-300",
+                            )}
                           >
-                            +
-                          </Button>
+                            {selected && (
+                              <div className="w-3 h-3 rounded-full bg-white" />
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -369,19 +366,17 @@ export function BookingSearch() {
               })}
             </div>
 
-            {/* PROCEED BAR */}
-
+            {/* 🚀 PROCEED */}
             {totalTypes > 0 && (
-              <div className="sticky bottom-6 mt-6 flex justify-between items-center rounded-lg border bg-card p-4 shadow">
-                <span className="font-medium">
-                  {totalRooms} room{totalRooms > 1 ? "s" : ""} across{" "}
-                  {totalTypes} type{totalTypes > 1 ? "s" : ""}
+              <div className="sticky bottom-6 mt-6 flex justify-between items-center border rounded-lg p-4 bg-card shadow">
+                <span>
+                  {totalRooms} room{totalRooms > 1 && "s"} across {totalTypes}{" "}
+                  type{totalTypes > 1 && "s"}
                 </span>
 
                 <Link href="/booking/checkout">
                   <Button className="bg-gold text-charcoal hover:bg-gold-dark">
-                    Proceed
-                    <ArrowRight className="size-4 ml-2" />
+                    Proceed <ArrowRight className="ml-2 size-4" />
                   </Button>
                 </Link>
               </div>

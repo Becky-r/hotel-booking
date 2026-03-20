@@ -1,39 +1,58 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { format } from "date-fns"
-import { CalendarDays, Users, Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useBooking } from "@/contexts/booking-context"
-import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { CalendarDays, Users, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useBooking } from "@/contexts/booking-context";
+import { cn } from "@/lib/utils";
 
 interface SearchWidgetProps {
-  variant?: "hero" | "inline" | "sidebar"
-  className?: string
+  variant?: "hero" | "inline" | "sidebar";
+  className?: string;
 }
 
-export function SearchWidget({ variant = "hero", className }: SearchWidgetProps) {
-  const router = useRouter()
-  const { booking, setCheckIn, setCheckOut, setAdults, setChildren } = useBooking()
+export function SearchWidget({
+  variant = "hero",
+  className,
+}: SearchWidgetProps) {
+  const router = useRouter();
+  const { booking, setCheckIn, setCheckOut, setAdults, setChildren } =
+    useBooking();
 
   const handleSearch = () => {
-    router.push("/booking")
-  }
+    if (!booking.checkIn || !booking.checkOut) return;
+    if (booking.checkOut <= booking.checkIn) return;
+    router.push("/booking");
+  };
 
-  const isHero = variant === "hero"
-  const isSidebar = variant === "sidebar"
+  const isHero = variant === "hero";
+  const isSidebar = variant === "sidebar";
 
   return (
     <div
       className={cn(
         "flex flex-col gap-3 rounded-lg",
-        isHero && "bg-background/95 p-4 shadow-xl backdrop-blur-sm md:flex-row md:items-end md:gap-2 md:p-3",
+        isHero &&
+          "bg-background/95 p-4 shadow-xl backdrop-blur-sm md:flex-row md:items-end md:gap-2 md:p-3",
         isSidebar && "gap-4",
-        !isHero && !isSidebar && "bg-card p-4 shadow-md md:flex-row md:items-end md:gap-2",
-        className
+        !isHero &&
+          !isSidebar &&
+          "bg-card p-4 shadow-md md:flex-row md:items-end md:gap-2",
+        className,
       )}
     >
       {/* Check-in */}
@@ -47,11 +66,13 @@ export function SearchWidget({ variant = "hero", className }: SearchWidgetProps)
               variant="outline"
               className={cn(
                 "justify-start gap-2 font-sans text-sm font-normal",
-                !booking.checkIn && "text-muted-foreground"
+                !booking.checkIn && "text-muted-foreground",
               )}
             >
               <CalendarDays className="size-4 text-gold" />
-              {booking.checkIn ? format(booking.checkIn, "MMM d, yyyy") : "Select date"}
+              {booking.checkIn
+                ? format(booking.checkIn, "MMM d, yyyy")
+                : "Select date"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -76,11 +97,13 @@ export function SearchWidget({ variant = "hero", className }: SearchWidgetProps)
               variant="outline"
               className={cn(
                 "justify-start gap-2 font-sans text-sm font-normal",
-                !booking.checkOut && "text-muted-foreground"
+                !booking.checkOut && "text-muted-foreground",
               )}
             >
               <CalendarDays className="size-4 text-gold" />
-              {booking.checkOut ? format(booking.checkOut, "MMM d, yyyy") : "Select date"}
+              {booking.checkOut
+                ? format(booking.checkOut, "MMM d, yyyy")
+                : "Select date"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -100,7 +123,10 @@ export function SearchWidget({ variant = "hero", className }: SearchWidgetProps)
           <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             Adults
           </label>
-          <Select value={String(booking.adults)} onValueChange={(v) => setAdults(Number(v))}>
+          <Select
+            value={String(booking.adults)}
+            onValueChange={(v) => setAdults(Number(v))}
+          >
             <SelectTrigger className="gap-2">
               <Users className="size-4 text-gold" />
               <SelectValue />
@@ -118,7 +144,10 @@ export function SearchWidget({ variant = "hero", className }: SearchWidgetProps)
           <label className="font-sans text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
             Children
           </label>
-          <Select value={String(booking.children)} onValueChange={(v) => setChildren(Number(v))}>
+          <Select
+            value={String(booking.children)}
+            onValueChange={(v) => setChildren(Number(v))}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -139,12 +168,12 @@ export function SearchWidget({ variant = "hero", className }: SearchWidgetProps)
         className={cn(
           "bg-gold text-charcoal hover:bg-gold-dark font-sans text-xs font-semibold uppercase tracking-wider",
           isHero && "md:h-9",
-          isSidebar && "w-full"
+          isSidebar && "w-full",
         )}
       >
         <Search className="size-4" />
         Check Availability
       </Button>
     </div>
-  )
+  );
 }

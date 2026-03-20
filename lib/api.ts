@@ -105,7 +105,7 @@ export async function availableRooms(params: {
   adults: number;
   children: number;
 }) {
-  return apiRequest<any>("GET", "/booking/available-rooms/", { params });
+  return apiRequest<any>("GET", "/booking/available-rooms/", undefined, { params });
 }
 
 export async function createBooking(data: any) {
