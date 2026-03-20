@@ -28,14 +28,14 @@ export interface GuestUser {
 interface AuthContextType {
   user: GuestUser | null;
   isLoggedIn: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   register: (data: {
     full_name: string;
     email: string;
     phone: string;
     password: string;
     password2: string;
-  }) => Promise<boolean>;
+  }) => Promise<void>;
   logout: () => void;
   toggleFavorite: (roomSlug: string) => void;
   loadingUser: boolean;

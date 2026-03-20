@@ -43,7 +43,9 @@ export async function apiRequest<T>(
         errData?.non_field_errors?.[0] ||
         errData?.message ||
         "Request failed. Please try again.";
-      throw new Error(message);
+      
+        throw new Error(message);
+
     }
     throw new Error("Network error or server unreachable");
   }
@@ -144,4 +146,8 @@ export async function getBookingDetails(reference: string) {
 
 export async function getUserBookings() {
   return apiRequest<any>("GET", "/booking/user-bookings/");
+}
+
+export async function getServices() { 
+  return apiRequest<any>("GET", "/inventory/services/");
 }

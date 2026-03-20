@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,25 +12,59 @@ import { useAuth } from "@/contexts/auth-context";
 import { HOTEL_NAME } from "@/lib/constants";
 import { SplashScreen } from "@/components/layout/splash-screen";
 
-export function LoginForm() {
-  const { login, loadingUser , user } = useAuth();
+export function RegisterForm() {
+  const { register, user, loadingUser } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  function update(field: string, value: string) {
+    setForm((p) => ({ ...p, [field]: value }));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+    console.log("Submitting registration with data:", {
+      full_name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+      email: form.email,
+      phone: form.phone,
+      password: form.password,
+      password2: form.confirmPassword,
+    });
     setLoading(true);
 
     try {
-      await login(email, password);
+      await register({
+        full_name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+        password2: form.confirmPassword,
+      });
+
       router.push("/account");
-    } catch (err: any) {
-      setError(err.message || "An error occurred. Please try again.");
+    } catch (error: any) {
+      setError(error.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -52,16 +86,18 @@ export function LoginForm() {
         <div className="relative hidden w-5/12 lg:block">
           <Image
             src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8087.JPG?updatedAt=1772962015224"
-            alt="Hotel entrance"
+            alt="Presidential Suite"
             fill
             className="object-cover"
           />
           <div className="absolute inset-0 bg-charcoal/60" />
           <div className="absolute bottom-8 left-8 right-8">
-            <h2 className="font-serif text-2xl text-cream">Welcome Back</h2>
+            <h2 className="font-serif text-2xl text-cream">
+              Join the Experience
+            </h2>
             <p className="mt-2 font-sans text-sm text-cream/70">
-              Sign in to manage your reservations and access exclusive member
-              benefits.
+              Create an account to unlock loyalty rewards, save favorite rooms,
+              and manage your bookings.
             </p>
           </div>
         </div>
@@ -69,9 +105,11 @@ export function LoginForm() {
         {/* Right - Form */}
         <div className="flex w-full flex-col justify-center p-8 lg:w-7/12 lg:p-12">
           <div className="flex flex-col gap-1">
-            <h1 className="font-serif text-2xl text-foreground">Sign In</h1>
+            <h1 className="font-serif text-2xl text-foreground">
+              Create Account
+            </h1>
             <p className="font-sans text-sm text-muted-foreground">
-              Access your {HOTEL_NAME} guest account
+              Begin your {HOTEL_NAME} membership
             </p>
           </div>
 
@@ -82,38 +120,83 @@ export function LoginForm() {
               </div>
             )}
 
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="flex flex-col gap-1.5">
+                <Label
+                  htmlFor="firstName"
+                  className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+                >
+                  First Name
+                </Label>
+                <Input
+                  id="firstName"
+                  required
+                  value={form.firstName}
+                  onChange={(e) => update("firstName", e.target.value)}
+                  placeholder="John"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label
+                  htmlFor="lastName"
+                  className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+                >
+                  Last Name
+                </Label>
+                <Input
+                  id="lastName"
+                  required
+                  value={form.lastName}
+                  onChange={(e) => update("lastName", e.target.value)}
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col gap-1.5">
               <Label
-                htmlFor="email"
+                htmlFor="regEmail"
                 className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
               >
                 Email Address
               </Label>
               <Input
-                id="email"
+                id="regEmail"
                 type="email"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={(e) => update("email", e.target.value)}
                 placeholder="your@email.com"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
+              <Label className="font-sans text-xs uppercase tracking-wider text-muted-foreground">
+                Phone
+              </Label>
+              <Input
+                required
+                value={form.phone}
+                onChange={(e) => update("phone", e.target.value)}
+                placeholder="+251..."
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
               <Label
-                htmlFor="password"
+                htmlFor="regPassword"
                 className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
               >
                 Password
               </Label>
               <div className="relative">
                 <Input
-                  id="password"
+                  id="regPassword"
                   type={showPassword ? "text" : "password"}
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  value={form.password}
+                  onChange={(e) => update("password", e.target.value)}
+                  placeholder="Min 8 characters"
                   className="pr-10"
                 />
                 <button
@@ -131,6 +214,23 @@ export function LoginForm() {
               </div>
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <Label
+                htmlFor="confirmPassword"
+                className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+              >
+                Confirm Password
+              </Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                required
+                value={form.confirmPassword}
+                onChange={(e) => update("confirmPassword", e.target.value)}
+                placeholder="Re-enter password"
+              />
+            </div>
+
             <Button
               type="submit"
               disabled={loading}
@@ -139,23 +239,23 @@ export function LoginForm() {
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="size-3.5 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
-                  Signing in...
+                  Creating account...
                 </span>
               ) : (
                 <>
-                  <LogIn className="size-3.5" />
-                  Sign In
+                  <UserPlus className="size-3.5" />
+                  Create Account
                 </>
               )}
             </Button>
 
             <p className="text-center font-sans text-sm text-muted-foreground">
-              {"Don't have an account? "}
+              Already have an account?{" "}
               <Link
-                href="/account/create"
+                href="/account/login"
                 className="font-medium text-gold hover:underline"
               >
-                Create one
+                Sign in
               </Link>
             </p>
           </form>
