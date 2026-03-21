@@ -48,7 +48,7 @@ interface BookingContextValue {
   toggleRoomSelection: (room_type: number, checked: boolean) => void;
 
   toggleService: (id: number) => void;
-
+  setBooking: (booking: BookingState) => void;
   setGuestDetails: (details: BookingState["guestDetails"]) => void;
 
   resetBooking: () => void;
@@ -94,17 +94,13 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
   /* ---------- BASIC SETTERS ---------- */
 
-  const setCheckIn = (d?: Date) =>
-    setBooking((s) => ({ ...s, checkIn: d }));
+  const setCheckIn = (d?: Date) => setBooking((s) => ({ ...s, checkIn: d }));
 
-  const setCheckOut = (d?: Date) =>
-    setBooking((s) => ({ ...s, checkOut: d }));
+  const setCheckOut = (d?: Date) => setBooking((s) => ({ ...s, checkOut: d }));
 
-  const setAdults = (n: number) =>
-    setBooking((s) => ({ ...s, adults: n }));
+  const setAdults = (n: number) => setBooking((s) => ({ ...s, adults: n }));
 
-  const setChildren = (n: number) =>
-    setBooking((s) => ({ ...s, children: n }));
+  const setChildren = (n: number) => setBooking((s) => ({ ...s, children: n }));
 
   /* ---------- ROOMS ---------- */
 
@@ -173,23 +169,18 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     <BookingContext.Provider
       value={{
         booking,
-
         setCheckIn,
         setCheckOut,
         setAdults,
         setChildren,
-
         rooms: booking.rooms,
-
         isRoomSelected,
         updateRoomQuantity,
         getRoomQuantity,
         toggleRoomSelection,
-
         toggleService,
-
         setGuestDetails,
-
+        setBooking,
         resetBooking,
       }}
     >
@@ -210,4 +201,4 @@ export function useBooking() {
   }
 
   return ctx;
-} 
+}

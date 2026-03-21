@@ -12,11 +12,12 @@ import { Separator } from "@/components/ui/separator";
 
 import { useBooking } from "@/contexts/booking-context";
 import { formatDate } from "@/lib/format";
-import { apiRequest, getServices } from "@/lib/api";
+import { apiRequest, createBooking, getServices } from "@/lib/api";
 import { toast } from "sonner";
+import { ServiceCard } from "@/components/booking/ServiceCard";
 export function CheckoutForm() {
   const router = useRouter();
-  const { booking, toggleService, rooms } = useBooking();
+  const { booking, setBooking, toggleService, rooms } = useBooking();
 
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,9 +62,7 @@ export function CheckoutForm() {
   useEffect(() => {
     fetchServices();
   }, []);
-  /* =========================
-     SUBMIT BOOKING
-  ========================= */
+
 
   const handleSubmit = async () => {
     if (!formData.firstName || !formData.lastName || !formData.phone) {
@@ -95,7 +94,7 @@ export function CheckoutForm() {
         guest_email: formData.email,
         guest_phone: formData.phone,
 
-        rooms: booking.rooms, // already correct format
+        rooms: booking.rooms,
 
         services: booking.services,
 
@@ -103,20 +102,12 @@ export function CheckoutForm() {
         tin_number: formData.tin_number || "",
         package_user_amount: formData.package_user_amount || "",
       };
-      console.log("Submitting booking with payload:", payload);
-      // await apiRequest("POST", "/booking/", payload);
-
-      // setGuestDetails({
-      //   firstName: formData.firstName,
-      //   lastName: formData.lastName,
-      //   email: formData.email,
-      //   phone: formData.phone,
-      // });
-
-      // toast.success("Booking successful!");
-      // router.push("/booking/confirmation");
+      const response = await createBooking(payload);
+      setBooking(response);
+      router.push("/booking/confirmation");
+      toast.success("Booking successful!");
     } catch (err: any) {
-      toast.error(err.message || "Booking failed");
+      toast.error(err.message || "Booking failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -196,7 +187,6 @@ export function CheckoutForm() {
                     setFormData({ ...formData, tin_number: e.target.value })
                   }
                 />
-             
               </div>
             </div>
             {/* ENHANCE YOUR STAY */}
@@ -212,43 +202,12 @@ export function CheckoutForm() {
                     const selected = booking.services.includes(service.id);
 
                     return (
-                      <div
+                      <ServiceCard
                         key={service.id}
-                        onClick={() => toggleService(service.id)}
-                        className={`flex items-center justify-between border rounded-md p-4 cursor-pointer transition
-              ${selected ? "border-gold bg-gold/5" : "hover:shadow-sm"}
-            `}
-                      >
-                        {/* LEFT */}
-                        <div className="space-y-1">
-                          <h3 className="font-semibold text-base">
-                            {service.name}
-                          </h3>
-
-                          {service.description && (
-                            <p className="text-sm text-muted-foreground">
-                              {service.description}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* RIGHT */}
-                        <div className="flex items-center gap-4">
-                          <span className="font-semibold text-sm">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(service.price)}
-                          </span>
-
-                          <Checkbox
-                            checked={selected}
-                            onClick={(e) => e.stopPropagation()}
-                            onCheckedChange={() => toggleService(service.id)}
-                            className="data-[state=checked]:bg-gold data-[state=checked]:border-gold data-[state=checked]:text-white"
-                          />
-                        </div>
-                      </div>
+                        service={service}
+                        selected={selected}
+                        toggleService={toggleService}
+                      />
                     );
                   })}
                 </div>

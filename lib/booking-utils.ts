@@ -1,48 +1,52 @@
-import { isWeekend } from "date-fns"
-import type { Room } from "./data/rooms"
-import { TAX_RATE, SERVICE_CHARGE_RATE, PROMO_CODES } from "./constants"
+import { isWeekend } from "date-fns";
+import type { Room } from "./data/rooms";
+import {
+  TAX_RATE,
+  SERVICE_CHARGE_RATE,
+  PROMO_CODES,
+  HOTEL_NAME,
+  HOTEL_ADDRESS,
+  HOTEL_PHONE,
+} from "./constants";
+import { formatCurrency, formatDate } from "./format";
 
 export function getPriceForDate(room: Room, date: Date): number {
-  if (isHoliday(date)) return room.holidayPrice
-  if (isWeekend(date)) return room.weekendPrice
-  return room.basePrice
+  if (isHoliday(date)) return room.holidayPrice;
+  if (isWeekend(date)) return room.weekendPrice;
+  return room.basePrice;
 }
 
 function isHoliday(date: Date): boolean {
-  const holidays = [
-    "01-01",
-    "07-04",
-    "12-25",
-    "12-31",
-  ]
-  const mmdd = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
-  return holidays.includes(mmdd)
+  const holidays = ["01-01", "07-04", "12-25", "12-31"];
+  const mmdd = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return holidays.includes(mmdd);
 }
 
 export function calculateStayPrice(
   room: Room,
   checkIn: Date,
-  checkOut: Date
+  checkOut: Date,
 ): {
-  nights: number
-  pricePerNight: number[]
-  subtotal: number
-  tax: number
-  serviceCharge: number
-  total: number
-  averagePerNight: number
+  nights: number;
+  pricePerNight: number[];
+  subtotal: number;
+  tax: number;
+  serviceCharge: number;
+  total: number;
+  averagePerNight: number;
 } {
-  const nights: number[] = []
-  const current = new Date(checkIn)
+  const nights: number[] = [];
+  const current = new Date(checkIn);
   while (current < checkOut) {
-    nights.push(getPriceForDate(room, current))
-    current.setDate(current.getDate() + 1)
+    nights.push(getPriceForDate(room, current));
+    current.setDate(current.getDate() + 1);
   }
-  const subtotal = nights.reduce((a, b) => a + b, 0)
-  const tax = Math.round(subtotal * TAX_RATE * 100) / 100
-  const serviceCharge = Math.round(subtotal * SERVICE_CHARGE_RATE * 100) / 100
-  const total = Math.round((subtotal + tax + serviceCharge) * 100) / 100
-  const averagePerNight = nights.length > 0 ? Math.round(subtotal / nights.length) : 0
+  const subtotal = nights.reduce((a, b) => a + b, 0);
+  const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+  const serviceCharge = Math.round(subtotal * SERVICE_CHARGE_RATE * 100) / 100;
+  const total = Math.round((subtotal + tax + serviceCharge) * 100) / 100;
+  const averagePerNight =
+    nights.length > 0 ? Math.round(subtotal / nights.length) : 0;
 
   return {
     nights: nights.length,
@@ -52,47 +56,126 @@ export function calculateStayPrice(
     serviceCharge,
     total,
     averagePerNight,
-  }
+  };
 }
 
 export function applyPromoCode(
   code: string,
-  subtotal: number
+  subtotal: number,
 ): { valid: boolean; discount: number; description: string } {
-  const promo = PROMO_CODES[code.toUpperCase()]
-  if (!promo) return { valid: false, discount: 0, description: "Invalid promo code" }
+  const promo = PROMO_CODES[code.toUpperCase()];
+  if (!promo)
+    return { valid: false, discount: 0, description: "Invalid promo code" };
 
   const discount =
     promo.type === "percent"
       ? Math.round(subtotal * (promo.discount / 100) * 100) / 100
-      : Math.min(promo.discount, subtotal)
+      : Math.min(promo.discount, subtotal);
 
-  return { valid: true, discount, description: promo.description }
+  return { valid: true, discount, description: promo.description };
 }
 
 export function generateBookingReference(): string {
-  const year = new Date().getFullYear()
-  const num = String(Math.floor(Math.random() * 999999)).padStart(6, "0")
-  return `AUR-${year}-${num}`
+  const year = new Date().getFullYear();
+  const num = String(Math.floor(Math.random() * 999999)).padStart(6, "0");
+  return `AUR-${year}-${num}`;
 }
 
 export function checkRoomAvailability(
   roomId: string,
   checkIn: Date,
-  checkOut: Date
+  checkOut: Date,
 ): boolean {
   // Mock: always available
-  void roomId
-  void checkIn
-  void checkOut
-  return true
+  void roomId;
+  void checkIn;
+  void checkOut;
+  return true;
 }
 
 export const ADD_ONS = [
   { id: "breakfast", name: "Breakfast Package", price: 0, per: "per night" },
   { id: "airport", name: "Airport Transfer", price: 120, per: "one way" },
-  
+
   { id: "baby-bed", name: "Baby Bed", price: 0, per: "complimentary" },
-  { id: "late-checkout", name: "Late Checkout (2 PM)", price: 6.7, per: "one time" },
+  {
+    id: "late-checkout",
+    name: "Late Checkout (2 PM)",
+    price: 6.7,
+    per: "one time",
+  },
   { id: "pet", name: "Pet Accommodation", price: 50, per: "per night" },
-] as const
+] as const;
+
+import jsPDF from "jspdf";
+
+export function downloadInvoice(booking: any, currency: any) {
+  if (!booking) return;
+
+  const doc = new jsPDF();
+
+  // 🏨 Header
+  doc.setFontSize(18);
+  doc.text("Booking Invoice", 14, 20);
+
+  doc.setFontSize(12);
+  doc.text(HOTEL_NAME, 14, 30);
+  doc.text(HOTEL_ADDRESS, 14, 36);
+  doc.text(`Phone: ${HOTEL_PHONE}`, 14, 42);
+
+  // 🔢 Reference
+  doc.setFontSize(12);
+  doc.text(`Reference: ${booking.reference}`, 14, 55);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 61);
+
+  // 👤 Guest Info
+  doc.text("Guest Information:", 14, 75);
+  doc.text(`${booking.guest_first_name} ${booking.guest_last_name}`, 14, 81);
+  doc.text(booking.guest_email, 14, 87);
+  doc.text(booking.guest_phone, 14, 93);
+
+  // 📅 Stay Info
+  doc.text("Stay Details:", 14, 105);
+  doc.text(`Check-in: ${formatDate(booking.check_in)}`, 14, 111);
+  doc.text(`Check-out: ${formatDate(booking.check_out)}`, 14, 117);
+
+  // 🛏️ Rooms
+  let y = 130;
+  doc.text("Rooms:", 14, y);
+
+  booking.rooms?.forEach((room: any, index: number) => {
+    y += 6;
+    doc.text(
+      `${index + 1}. ${room.room_type} - Room ${room.room_number} (${room.price_per_night})`,
+      14,
+      y,
+    );
+  });
+
+  // 🧾 Services
+  if (booking.services?.length > 0) {
+    y += 10;
+    doc.text("Services:", 14, y);
+
+    booking.services.forEach((service: any, index: number) => {
+      y += 6;
+      doc.text(
+        `${index + 1}. ${service.name} x${service.quantity} (${service.calculated_price})`,
+        14,
+        y,
+      );
+    });
+  }
+
+  // 💰 Total
+  y += 12;
+  doc.setFontSize(14);
+  doc.text(`Total: ${formatCurrency(booking.total_amount, currency)}`, 14, y);
+
+  y += 10;
+  doc.setFontSize(10);
+  doc.text("Thank you for choosing our hotel.", 14, y);
+
+  // ⬇️ Download
+  doc.save(`invoice-${booking.reference}.pdf`);
+}
