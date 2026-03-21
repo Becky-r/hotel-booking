@@ -5,9 +5,6 @@ import { format } from "date-fns";
 import { useBooking } from "@/contexts/booking-context";
 import { useSite } from "@/contexts/site-context";
 import { availableRooms as fetchAvailableRooms } from "@/lib/api";
-import { formatCurrency } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import BookingSummaryBar from "@/components/booking/BookingSummaryBar";
 import SearchForm from "@/components/booking/SearchForm";
 import RoomResultsList from "@/components/booking/RoomResultsList";
 
@@ -47,7 +44,6 @@ export function BookingSearch() {
         adults: booking.adults,
         children: booking.children,
       });
-
       setRoomsData(data);
       setSearched(true);
     } catch (err) {
@@ -67,7 +63,22 @@ export function BookingSearch() {
     setAdults(1);
     setChildren(0);
   };
+  const nights =
+    booking.checkIn && booking.checkOut
+      ? Math.ceil(
+          (booking.checkOut.getTime() - booking.checkIn.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 0;
+  const totalBookingPrice = rooms.reduce((sum, selectedRoom) => {
+    const room = roomsData.find(
+      (r) => r.room_type_id === selectedRoom.room_type,
+    );
 
+    if (!room) return sum;
+
+    return sum + Number(room.price) * selectedRoom.quantity * nights;
+  }, 0);
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
@@ -85,7 +96,7 @@ export function BookingSearch() {
         />
 
         {/* RESULTS */}
-        {(searched) && (
+        {searched && (
           <RoomResultsList
             roomsData={roomsData}
             currency={currency}
@@ -96,6 +107,8 @@ export function BookingSearch() {
             hasDate={hasDate}
             totalTypes={totalTypes}
             totalRooms={totalRooms}
+            nights={nights}
+            totalBookingPrice={totalBookingPrice}
           />
         )}
       </div>

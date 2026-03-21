@@ -158,8 +158,9 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
   const setGuestDetails = (details: BookingState["guestDetails"]) =>
     setBooking((s) => ({ ...s, guestDetails: details }));
-
-  /* ---------- RESET ---------- */
+ 
+ 
+  // reset 
 
   const resetBooking = () => setBooking(defaultBooking);
 
@@ -189,9 +190,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/* =========================
-   HOOK
-========================= */
+// hook
 
 export function useBooking() {
   const ctx = useContext(BookingContext);

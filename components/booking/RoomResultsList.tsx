@@ -2,7 +2,7 @@
 "use client";
 
 import { formatCurrency } from "@/lib/format";
-import {  Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import BookingSummaryBar from "./BookingSummaryBar";
@@ -19,6 +19,8 @@ type Props = {
   hasDate: Date | undefined;
   totalTypes: number;
   totalRooms: number;
+  nights: number;
+  totalBookingPrice?: number;
 };
 
 export default function RoomResultsList({
@@ -31,6 +33,8 @@ export default function RoomResultsList({
   hasDate,
   totalTypes,
   totalRooms,
+  nights,
+  totalBookingPrice,
 }: Props) {
   return (
     <div className="mt-8">
@@ -46,7 +50,8 @@ export default function RoomResultsList({
         {roomsData.map((room) => {
           const quantity = getRoomQuantity(room.room_type_id);
           const selected = isRoomSelected(room.room_type_id);
-
+          const pricePerNight = Number(room.price);
+          const totalRoomPrice = pricePerNight * nights * quantity;
           const imageUrl =
             room.images?.[0]?.image ||
             "https://blocks.astratic.com/img/general-img-landscape.png";
@@ -94,12 +99,25 @@ export default function RoomResultsList({
                 <div className="flex flex-col items-end gap-3">
                   {/* PRICE */}
                   <div className="text-right">
-                    <p className="text-xl font-bold">
-                      {formatCurrency(room.price, currency)}
-                    </p>
-                    <span className="text-xs text-muted-foreground">
-                      per night
-                    </span>
+                    {selected && quantity > 0 && nights > 0 ? (
+                      <>
+                        <p className="text-xl font-bold">
+                          {formatCurrency(totalRoomPrice, currency)}
+                        </p>
+                        <span className="text-xs text-muted-foreground">
+                          per {nights} night{nights > 1 ? "s" : ""}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <p className="">
+                          {formatCurrency(pricePerNight, currency)}
+                        </p>
+                        <span className="text-xs text-muted-foreground">
+                          per night
+                        </span>
+                      </>
+                    )}
                   </div>
 
                   {/* QUANTITY + SELECT CIRCLE */}
@@ -158,7 +176,13 @@ export default function RoomResultsList({
 
       {/* 🚀 PROCEED */}
       {totalTypes > 0 && (
-        <BookingSummaryBar totalRooms={totalRooms} totalTypes={totalTypes} />
+        <BookingSummaryBar
+          totalRooms={totalRooms}
+          totalTypes={totalTypes}
+          totalBookingPrice={totalBookingPrice}
+          currency={currency}
+          nights={nights}
+          />
       )}
     </div>
   );
