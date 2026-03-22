@@ -59,7 +59,14 @@ export default function RoomResultsList({
           return (
             <div
               key={room.room_type_id}
-              onClick={() => toggleRoomSelection(room.room_type_id, !selected)}
+              onClick={() =>
+                toggleRoomSelection(room.room_type_id, !selected, {
+                  name: room.name,
+                  price: room.price,
+                  images: room.images,
+                  capacity: room.capacity,
+                })
+              }
               className={cn(
                 "flex flex-col sm:flex-row overflow-hidden rounded-lg border bg-card transition-all duration-200 hover:shadow-lg cursor-pointer group",
                 selected ? "ring-1 ring-gold" : "border-border/50",
@@ -130,7 +137,9 @@ export default function RoomResultsList({
                         disabled={!selected || quantity === 0}
                         onClick={(e) => {
                           e.stopPropagation();
-                          updateRoomQuantity(room.room_type_id, quantity - 1);
+                          updateRoomQuantity(room.room_type_id, quantity - 1 ,
+                            
+                          );
                         }}
                       >
                         -
@@ -146,7 +155,8 @@ export default function RoomResultsList({
                         disabled={!selected || quantity >= room.available_rooms}
                         onClick={(e) => {
                           e.stopPropagation();
-                          updateRoomQuantity(room.room_type_id, quantity + 1);
+                          updateRoomQuantity(room.room_type_id, quantity + 1
+                          );
                         }}
                       >
                         +
@@ -182,7 +192,7 @@ export default function RoomResultsList({
           totalBookingPrice={totalBookingPrice}
           currency={currency}
           nights={nights}
-          />
+        />
       )}
     </div>
   );

@@ -11,17 +11,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
 import { useBooking } from "@/contexts/booking-context";
-import { formatDate } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { apiRequest, createBooking, getServices } from "@/lib/api";
 import { toast } from "sonner";
 import { ServiceCard } from "@/components/booking/ServiceCard";
+import { useSite } from "@/contexts/site-context";
+import { format } from "date-fns";
 export function CheckoutForm() {
   const router = useRouter();
-  const { booking, setBooking, toggleService, rooms } = useBooking();
-
+  const { booking, setBooking, toggleService, rooms, services } = useBooking();
+  const { currency } = useSite();
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [services, setServices] = useState<any[]>([]);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -33,10 +35,7 @@ export function CheckoutForm() {
   });
 
   const hasRooms = booking.rooms.length > 0;
-  const roomMap = useMemo(() => {
-    if (!rooms) return {};
-    return Object.fromEntries(rooms.map((r) => [r.room_type, r]));
-  }, [rooms]);
+
   if (!hasRooms) {
     return (
       <section className="flex flex-col items-center justify-center gap-6 py-28">
@@ -50,19 +49,6 @@ export function CheckoutForm() {
       </section>
     );
   }
-  const fetchServices = async () => {
-    try {
-      const response = await getServices();
-      setServices(response);
-      console.log("Available services:", response);
-    } catch (error) {
-      console.error("Error fetching services:", error);
-    }
-  };
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
 
   const handleSubmit = async () => {
     if (!formData.firstName || !formData.lastName || !formData.phone) {
@@ -84,8 +70,8 @@ export function CheckoutForm() {
 
     try {
       const payload = {
-        check_in: booking.checkIn.toISOString().split("T")[0],
-        check_out: booking.checkOut.toISOString().split("T")[0],
+        check_in: format(booking.checkIn, "yyyy-MM-dd"),
+        check_out: format(booking.checkOut, "yyyy-MM-dd"),
         adults: booking.adults,
         children: booking.children,
 
@@ -102,17 +88,40 @@ export function CheckoutForm() {
         tin_number: formData.tin_number || "",
         package_user_amount: formData.package_user_amount || "",
       };
+      console.log("Booking payload:", payload);
       const response = await createBooking(payload);
       setBooking(response);
       router.push("/booking/confirmation");
       toast.success("Booking successful!");
     } catch (err: any) {
-      toast.error(err.message || "Booking failed. Try again.");
+      toast.error(err.message
+         || "Booking failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
-
+  // Number of nights
+  const nights =
+    booking.checkIn && booking.checkOut
+      ? Math.ceil(
+          (booking.checkOut.getTime() - booking.checkIn.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 0;
+  // the total price of booked rooms
+  const totalPrice = booking.rooms.reduce((sum, room) => {
+    return sum + Number(room.price) * room.quantity * nights;
+  }, 0);
+  const servicesTotal = useMemo(() => {
+    return services.reduce((sum, service) => {
+      if (booking.services.includes(service.id)) {
+        return sum + Number(service.price);
+      }
+      return sum;
+    }, 0);
+  }, [services, booking.services]);
+  const finalTotal = totalPrice + servicesTotal;
+  const tax = finalTotal * 0.15; 
   return (
     <>
       {/* HEADER */}
@@ -134,7 +143,9 @@ export function CheckoutForm() {
             {/* GUEST */}
             <div className="border rounded-lg p-6">
               <h2 className="text-xl font-bold">Guest Details</h2>
-
+              <p className="text-sm text-muted-foreground mt-1">
+              * Required fields
+              </p>
               <div className="grid gap-4 mt-4 sm:grid-cols-2">
                 <Input
                   placeholder="First Name *"
@@ -249,23 +260,42 @@ export function CheckoutForm() {
                   <strong>Guests:</strong> {booking.adults} Adults,{" "}
                   {booking.children} Children
                 </p>
+                <Separator />
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Rooms</span>
+                    <span>{formatCurrency(totalPrice, currency)}</span>
+                  </div>
 
+                  <div className="flex justify-between">
+                    <span>Services</span>
+                    <span>{formatCurrency(servicesTotal, currency)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax (15%)</span>
+                    <span>{formatCurrency(tax, currency)}</span>
+                  </div>
+                  <Separator />
+
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span>{formatCurrency(finalTotal, currency)}</span>
+                  </div>
+                </div>
                 <Separator />
 
                 <div>
                   <strong>Rooms:</strong>
 
                   <div className="mt-3 space-y-3">
-                    {booking.rooms.map((r) => {
-                      const room = roomMap[r.room_type];
-
+                    {booking.rooms.map((room) => {
                       const imageUrl =
                         room?.images?.[0]?.image ||
                         "https://blocks.astratic.com/img/general-img-landscape.png";
 
                       return (
                         <div
-                          key={r.room_type}
+                          key={room.room_type}
                           className="flex items-center gap-3 border rounded-md p-2"
                         >
                           {/* IMAGE */}
@@ -280,11 +310,11 @@ export function CheckoutForm() {
                           {/* INFO */}
                           <div className="flex flex-col">
                             <span className="text-sm font-medium">
-                              {room?.name || `Room #${r.room_type}`}
+                              {room?.name || `Room #${room.room_type}`}
                             </span>
 
                             <span className="text-xs text-muted-foreground">
-                              Quantity: {r.quantity}
+                              Quantity: {room.quantity}
                             </span>
                           </div>
                         </div>

@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { getServices } from "@/lib/api";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 /* =========================
    TYPES
@@ -9,6 +16,11 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 export interface SelectedRoom {
   room_type: number;
   quantity: number;
+
+  name?: string;
+  price?: string;
+  images?: any[];
+  capacity?: number;
 }
 
 export interface BookingState {
@@ -52,6 +64,7 @@ interface BookingContextValue {
   setGuestDetails: (details: BookingState["guestDetails"]) => void;
 
   resetBooking: () => void;
+  services: any[];
 }
 
 /* =========================
@@ -91,7 +104,7 @@ const BookingContext = createContext<BookingContextValue | null>(null);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [booking, setBooking] = useState<BookingState>(defaultBooking);
-
+  const [services, setServices] = useState<any[]>([]);
   /* ---------- BASIC SETTERS ---------- */
 
   const setCheckIn = (d?: Date) => setBooking((s) => ({ ...s, checkIn: d }));
@@ -108,8 +121,13 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     return booking.rooms.some((r) => r.room_type === room_type);
   };
 
-  const updateRoomQuantity = (room_type: number, quantity: number) => {
+  const updateRoomQuantity = (
+    room_type: number,
+    quantity: number,
+    roomData?: Partial<SelectedRoom>,
+  ) => {
     setBooking((s) => {
+      const existing = s.rooms.find((r) => r.room_type === room_type);
       const others = s.rooms.filter((r) => r.room_type !== room_type);
 
       if (quantity <= 0) {
@@ -118,7 +136,17 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
       return {
         ...s,
-        rooms: [...others, { room_type, quantity }],
+        rooms: [
+          ...others,
+          {
+            room_type,
+            quantity,
+            name: roomData?.name || existing?.name,
+            price: roomData?.price || existing?.price,
+            images: roomData?.images || existing?.images,
+            capacity: roomData?.capacity || existing?.capacity,
+          },
+        ],
       };
     });
   };
@@ -128,7 +156,11 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     return found ? found.quantity : 0;
   };
 
-  const toggleRoomSelection = (room_type: number, checked: boolean) => {
+  const toggleRoomSelection = (
+    room_type: number,
+    checked: boolean,
+    roomData?: Partial<SelectedRoom>,
+  ) => {
     setBooking((s) => {
       if (!checked) {
         return {
@@ -139,7 +171,14 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
       return {
         ...s,
-        rooms: [...s.rooms, { room_type, quantity: 1 }],
+        rooms: [
+          ...s.rooms,
+          {
+            room_type,
+            quantity: 1,
+            ...roomData,
+          },
+        ],
       };
     });
   };
@@ -158,13 +197,23 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
   const setGuestDetails = (details: BookingState["guestDetails"]) =>
     setBooking((s) => ({ ...s, guestDetails: details }));
- 
- 
-  // reset 
+
+  // reset
 
   const resetBooking = () => setBooking(defaultBooking);
 
   /* ========================= */
+  const fetchServices = async () => {
+    try {
+      const response = await getServices();
+      setServices(response);
+    } catch (error) {
+      console.error("Couldn't fetch services ");
+    }
+  };
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
   return (
     <BookingContext.Provider
@@ -183,6 +232,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         setGuestDetails,
         setBooking,
         resetBooking,
+        services,
       }}
     >
       {children}

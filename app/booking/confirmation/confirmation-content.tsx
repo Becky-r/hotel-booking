@@ -59,10 +59,10 @@ export function ConfirmationContent() {
 
       const formData = new FormData();
       formData.append("payment_screenshot", file);
-
       await uploadPaymentScreenshot(booking.reference, formData);
       toast.success(" Successfully uploaded payment screenshot.");
       router.push("/account");
+      resetBooking();
       setSuccess(true);
     } catch (err: any) {
       setError("Failed to upload screenshot. Try again.");
@@ -284,7 +284,7 @@ export function ConfirmationContent() {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="mt-4 block w-full text-sm"
+                className="mt-4 block w-full text-sm bg-gray-100 p-2 rounded-md cursor-pointer"
               />
 
               {/* PREVIEW */}
