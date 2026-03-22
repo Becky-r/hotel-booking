@@ -151,3 +151,10 @@ export async function getUserBookings() {
 export async function getServices() { 
   return apiRequest<any>("GET", "/inventory/services/");
 }
+export async function getRoomTypes() {
+  return apiRequest<any>("GET", "/inventory/room-types/")
+}
+
+export async function getRoomTypeDetails(id: number) { 
+  return apiRequest<any>("GET", `/inventory/room-types/${id}/`)
+}

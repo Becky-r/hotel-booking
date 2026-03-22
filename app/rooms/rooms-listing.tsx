@@ -1,36 +1,56 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { rooms } from "@/lib/data/rooms"
-import { RoomCard } from "@/components/rooms/room-card"
+import { useEffect, useState } from "react";
+import { RoomCard } from "@/components/rooms/room-card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { getRoomTypes } from "@/lib/api";
+import { SplashScreen } from "@/components/layout/splash-screen";
 
-type SortOption = "price-low" | "price-high" | "size" | "guests"
+type SortOption = "price-low" | "price-high" | "size" | "guests";
 
 export function RoomsListing() {
-  const [sort, setSort] = useState<SortOption>("price-low")
-
+  const [sort, setSort] = useState<SortOption>("price-low");
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const sorted = [...rooms].sort((a, b) => {
     switch (sort) {
       case "price-low":
-        return a.basePrice - b.basePrice
+        return a.basePrice - b.basePrice;
       case "price-high":
-        return b.basePrice - a.basePrice
+        return b.basePrice - a.basePrice;
       case "size":
-        return b.size - a.size
+        return b.size - a.size;
       case "guests":
-        return b.maxAdults - a.maxAdults
+        return b.maxAdults - a.maxAdults;
       default:
-        return 0
+        return 0;
     }
-  })
+  });
+  const fetchRooms = async () => {
+    setLoading(true);
+    try {
+      const response = await getRoomTypes();
+      setRooms(response);
+    } catch (err) {
+      console.error("Error fetching rooms:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  if (loading) {
+    return <SplashScreen />;
+  }
   return (
     <section className="bg-background py-12 lg:py-16">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
@@ -39,9 +59,14 @@ export function RoomsListing() {
           <p className="font-sans text-sm text-muted-foreground">
             {rooms.length} room types available
           </p>
-          <div className="flex items-center gap-2">
-            <span className="font-sans text-xs text-muted-foreground">Sort by:</span>
-            <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
+          {/* <div className="flex items-center gap-2">
+            <span className="font-sans text-xs text-muted-foreground">
+              Sort by:
+            </span>
+            <Select
+              value={sort}
+              onValueChange={(v) => setSort(v as SortOption)}
+            >
               <SelectTrigger className="h-8 w-40 text-xs">
                 <SelectValue />
               </SelectTrigger>
@@ -52,7 +77,7 @@ export function RoomsListing() {
                 <SelectItem value="guests">Guest Capacity</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
         </div>
 
         {/* Room list */}
@@ -63,5 +88,5 @@ export function RoomsListing() {
         </div>
       </div>
     </section>
-  )
+  );
 }

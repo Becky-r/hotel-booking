@@ -1,46 +1,73 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { BedDouble, Users, Maximize, Building2, Eye, Check, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { RoomGallery } from "@/components/rooms/room-gallery"
-import { SearchWidget } from "@/components/booking/search-widget"
-import { SectionHeading } from "@/components/shared/section-heading"
-import { formatCurrency } from "@/lib/format"
-import { useSite } from "@/contexts/site-context"
-import { useBooking } from "@/contexts/booking-context"
-import { useRouter } from "next/navigation"
-import type { Room } from "@/lib/data/rooms"
-import { rooms } from "@/lib/data/rooms"
+import Link from "next/link";
+import Image from "next/image";
+import {
+  BedDouble,
+  Users,
+  Maximize,
+  Building2,
+  Eye,
+  Check,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { RoomGallery } from "@/components/rooms/room-gallery";
+import { SearchWidget } from "@/components/booking/search-widget";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { formatCurrency } from "@/lib/format";
+import { useSite } from "@/contexts/site-context";
+import { useBooking } from "@/contexts/booking-context";
+import { useRouter } from "next/navigation";
+import type { Room } from "@/lib/data/rooms";
+import { rooms } from "@/lib/data/rooms";
 
 interface RoomDetailContentProps {
-  room: Room
+  data: Room;
 }
 
-export function RoomDetailContent({ room }: RoomDetailContentProps) {
-  const { currency } = useSite()
-  const { setSelectedRoom } = useBooking()
-  const router = useRouter()
+export function RoomDetailContent({ data }: RoomDetailContentProps) {
+  const { currency } = useSite();
+  const router = useRouter();
 
-  const relatedRooms = rooms.filter((r) => r.id !== room.id).slice(0, 3)
-
+  const relatedRooms = rooms.filter((r) => r.id !== data.id).slice(0, 3);
+  const room = {
+    id: data.id,
+    name: data.name,
+    description: data.description,
+    basePrice: Number(data.base_price),
+    capacity: data.capacity,
+    amenities: data.amenities.map((a) => a.name),
+    images: data.room_images.map((img) => img.image),
+    floor: "Depends on Room",
+    view: "City View",
+    size: 0,
+    bedType: "King",
+    maxAdults: data.capacity,
+    maxChildren: 0,
+  };
   const handleBookThis = () => {
-    setSelectedRoom(room)
-    router.push("/booking")
-  }
+    router.push("/booking");
+  };
 
   return (
     <>
       {/* Breadcrumb */}
       <div className="border-b border-border/50 bg-secondary/30">
         <div className="mx-auto max-w-7xl px-4 py-3 lg:px-6">
-          <nav className="flex items-center gap-2 font-sans text-xs text-muted-foreground" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav
+            className="flex items-center gap-2 font-sans text-xs text-muted-foreground"
+            aria-label="Breadcrumb"
+          >
+            <Link href="/" className="hover:text-foreground">
+              Home
+            </Link>
             <span>/</span>
-            <Link href="/rooms" className="hover:text-foreground">Rooms & Suites</Link>
+            <Link href="/rooms" className="hover:text-foreground">
+              Rooms & Suites
+            </Link>
             <span>/</span>
             <span className="text-foreground">{room.name}</span>
           </nav>
@@ -62,16 +89,20 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
                     <h1 className="font-serif text-3xl font-bold text-foreground md:text-4xl">
                       {room.name}
                     </h1>
-                    <p className="mt-1 font-sans text-sm text-muted-foreground">
+                    {/* <p className="mt-1 font-sans text-sm text-muted-foreground">
                       {room.floor} Floor &middot; {room.view}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="text-right">
-                    <span className="font-sans text-xs text-muted-foreground">from</span>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      from
+                    </span>
                     <p className="font-serif text-2xl font-bold text-foreground">
                       {formatCurrency(room.basePrice, currency)}
                     </p>
-                    <span className="font-sans text-xs text-muted-foreground">per night</span>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      per night
+                    </span>
                   </div>
                 </div>
                 <p className="mt-6 font-sans text-base leading-relaxed text-muted-foreground">
@@ -83,29 +114,45 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
 
               {/* Room Specs */}
               <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">Room Details</h2>
+                <h2 className="font-serif text-xl font-bold text-foreground">
+                  Room Details
+                </h2>
                 <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  <div className="flex flex-col items-center gap-2 rounded-lg border border-border/50 p-4 text-center">
+                  {/* <div className="flex flex-col items-center gap-2 rounded-lg border border-border/50 p-4 text-center">
                     <Maximize className="size-5 text-gold" />
-                    <span className="font-sans text-xs text-muted-foreground">Size</span>
-                    <span className="font-sans text-sm font-semibold text-foreground">{room.size} sq ft</span>
-                  </div>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      Size
+                    </span>
+                    <span className="font-sans text-sm font-semibold text-foreground">
+                      {room.size} sq ft
+                    </span>
+                  </div> */}
                   <div className="flex flex-col items-center gap-2 rounded-lg border border-border/50 p-4 text-center">
                     <BedDouble className="size-5 text-gold" />
-                    <span className="font-sans text-xs text-muted-foreground">Bed Type</span>
-                    <span className="font-sans text-sm font-semibold text-foreground">{room.bedType}</span>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      Bed Type
+                    </span>
+                    <span className="font-sans text-sm font-semibold text-foreground">
+                      {room.bedType}
+                    </span>
                   </div>
                   <div className="flex flex-col items-center gap-2 rounded-lg border border-border/50 p-4 text-center">
                     <Users className="size-5 text-gold" />
-                    <span className="font-sans text-xs text-muted-foreground">Guests</span>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      Guests
+                    </span>
                     <span className="font-sans text-sm font-semibold text-foreground">
-                      {room.maxAdults}A + {room.maxChildren}C
+                      {room.maxAdults}
                     </span>
                   </div>
                   <div className="flex flex-col items-center gap-2 rounded-lg border border-border/50 p-4 text-center">
                     <Eye className="size-5 text-gold" />
-                    <span className="font-sans text-xs text-muted-foreground">View</span>
-                    <span className="font-sans text-sm font-semibold text-foreground">{room.view}</span>
+                    <span className="font-sans text-xs text-muted-foreground">
+                      View
+                    </span>
+                    <span className="font-sans text-sm font-semibold text-foreground">
+                      {room.view}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -114,12 +161,16 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
 
               {/* Amenities */}
               <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">Amenities</h2>
+                <h2 className="font-serif text-xl font-bold text-foreground">
+                  Amenities
+                </h2>
                 <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {room.amenities.map((amenity) => (
                     <div key={amenity} className="flex items-center gap-2">
                       <Check className="size-3.5 shrink-0 text-gold" />
-                      <span className="font-sans text-sm text-muted-foreground">{amenity}</span>
+                      <span className="font-sans text-sm text-muted-foreground">
+                        {amenity}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -129,18 +180,22 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
 
               {/* Pricing Table */}
               <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">Pricing</h2>
+                <h2 className="font-serif text-xl font-bold text-foreground">
+                  Pricing
+                </h2>
                 <div className="mt-4 overflow-hidden rounded-lg border border-border/50">
                   <div className="grid grid-cols-3">
                     <div className="bg-secondary/50 p-4 text-center">
-                      <span className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">Standard</span>
+                      <span className="font-sans text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Standard
+                      </span>
                       <p className="mt-1 font-serif text-xl font-bold text-foreground">
                         {formatCurrency(room.basePrice, currency)}
                       </p>
-                      <span className="font-sans text-xs text-muted-foreground">per night</span>
+                      <span className="font-sans text-xs text-muted-foreground">
+                        per night
+                      </span>
                     </div>
-                   
-                  
                   </div>
                 </div>
               </div>
@@ -149,7 +204,9 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
             {/* Right Column - Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 flex flex-col gap-6 rounded-lg border border-border/50 bg-card p-6 shadow-sm">
-                <h3 className="font-serif text-lg font-bold text-foreground">Book This Room</h3>
+                <h3 className="font-serif text-lg font-bold text-foreground">
+                  Book This Room
+                </h3>
                 <SearchWidget variant="sidebar" />
                 <Separator />
                 <Button
@@ -175,7 +232,7 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
             {relatedRooms.map((r) => (
               <Link
                 key={r.id}
-                href={`/rooms/${r.slug}`}
+                href={`/rooms/${r.id}`}
                 className="group overflow-hidden rounded-lg bg-card transition-shadow hover:shadow-lg"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -187,7 +244,9 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
                   />
                 </div>
                 <div className="p-4">
-                  <h4 className="font-serif text-lg font-bold text-foreground">{r.name}</h4>
+                  <h4 className="font-serif text-lg font-bold text-foreground">
+                    {r.name}
+                  </h4>
                   <p className="mt-1 font-sans text-xs text-muted-foreground">
                     From {formatCurrency(r.basePrice, currency)} / night
                   </p>
@@ -198,5 +257,5 @@ export function RoomDetailContent({ room }: RoomDetailContentProps) {
         </div>
       </section>
     </>
-  )
+  );
 }
