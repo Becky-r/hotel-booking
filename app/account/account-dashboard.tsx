@@ -41,7 +41,7 @@ const statusColors: Record<string, string> = {
 };
 
 export function AccountDashboard() {
-  const { user, isLoggedIn , loadingUser, logout, bookings, setBookings } = useAuth();
+  const { user, isLoggedIn , loadingUser, logout, bookings, setBookings , fetchUserBookings } = useAuth();
   const { currency } = useSite();
   const router = useRouter();
   const now = new Date();
@@ -103,7 +103,7 @@ export function AccountDashboard() {
         booking.reference === reference ? response : booking,
       );
       setBookings(updatedBookings);
-    } catch (err) {
+    } catch (err : any)  {
       toast.error(err.message || "Couldn't cancel booking. Please try again.");
     }
   };
@@ -159,8 +159,9 @@ export function AccountDashboard() {
                   <BookingCard
                     key={booking.reference}
                     booking={booking}
-                    currency="USD"
+                    currency={currency}
                     handleCancel={() => handleCancel(booking.reference)}
+                    onSuccess={() =>  fetchUserBookings() }
                   />
                 ))}
               </div>
@@ -181,7 +182,7 @@ export function AccountDashboard() {
                   <div key={booking.reference} className="opacity-80">
                     <BookingCard
                       booking={booking}
-                      currency="USD"
+                      currency={currency}
                       isCancellable={false}
                     />
                   </div>

@@ -109,73 +109,192 @@ export const ADD_ONS = [
 
 import jsPDF from "jspdf";
 
-export function downloadInvoice(booking: any, currency: any) {
+function safe(value: any) {
+  if (value === null || value === undefined || value === "") return "N/A";
+  return String(value);
+}
+
+function currencyFormat(amount: any, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency || "USD",
+  }).format(Number(amount || 0));
+}
+
+export function downloadInvoice(booking: any, currency: string = "USD") {
   if (!booking) return;
 
   const doc = new jsPDF();
 
-  // 🏨 Header
-  doc.setFontSize(18);
-  doc.text("Booking Invoice", 14, 20);
+  let y = 20;
 
-  doc.setFontSize(12);
-  doc.text(HOTEL_NAME, 14, 30);
-  doc.text(HOTEL_ADDRESS, 14, 36);
-  doc.text(`Phone: ${HOTEL_PHONE}`, 14, 42);
+  // =========================
+  // 🏨 HEADER
+  // =========================
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text(HOTEL_NAME, 14, y);
 
-  // 🔢 Reference
-  doc.setFontSize(12);
-  doc.text(`Reference: ${booking.reference}`, 14, 55);
-  doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 61);
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(HOTEL_ADDRESS, 14, y);
 
-  // 👤 Guest Info
-  doc.text("Guest Information:", 14, 75);
-  doc.text(`${booking.guest_first_name} ${booking.guest_last_name}`, 14, 81);
-  doc.text(booking.guest_email, 14, 87);
-  doc.text(booking.guest_phone, 14, 93);
+  y += 5;
+  doc.text(`Phone: ${HOTEL_PHONE}`, 14, y);
 
-  // 📅 Stay Info
-  doc.text("Stay Details:", 14, 105);
-  doc.text(`Check-in: ${formatDate(booking.check_in)}`, 14, 111);
-  doc.text(`Check-out: ${formatDate(booking.check_out)}`, 14, 117);
+  // Invoice title
+  doc.setFontSize(16);
+  doc.text("INVOICE", 160, 20);
 
-  // 🛏️ Rooms
-  let y = 130;
-  doc.text("Rooms:", 14, y);
+  y += 15;
 
-  booking.rooms?.forEach((room: any, index: number) => {
-    y += 6;
-    doc.text(
-      `${index + 1}. ${room.room_type} - Room ${room.room_number} (${room.price_per_night})`,
-      14,
-      y,
-    );
+  doc.line(14, y, 196, y);
+  y += 10;
+
+  // =========================
+  // 🔢 BOOKING INFO
+  // =========================
+  doc.setFont("helvetica", "bold");
+  doc.text("Booking Information", 14, y);
+
+  y += 6;
+  doc.setFont("helvetica", "normal");
+
+  doc.text(`Reference: ${safe(booking.reference)}`, 14, y);
+  y += 6;
+  doc.text(`Booked on: ${new Date(booking.created_at).toLocaleDateString()}`, 14, y);
+
+  y += 6;
+  doc.text(`Status: ${safe(booking.status)}`, 14, y);
+
+  y += 12;
+
+  // =========================
+  // 👤 GUEST INFO
+  // =========================
+  doc.setFont("helvetica", "bold");
+  doc.text("Guest Information", 14, y);
+
+  y += 6;
+  doc.setFont("helvetica", "normal");
+
+  doc.text(
+    `Full Name: ${safe(booking.guest_first_name)} ${safe(booking.guest_last_name)}`,
+    14,
+    y,
+  );
+
+  y += 6;
+  doc.text(`Email: ${safe(booking.guest_email)}`, 14, y);
+
+  y += 6;
+  doc.text(`Phone: ${safe(booking.guest_phone)}`, 14, y);
+
+  y += 12;
+
+  // =========================
+  // 📅 STAY DETAILS
+  // =========================
+  doc.setFont("helvetica", "bold");
+  doc.text("Stay Details", 14, y);
+
+  y += 6;
+  doc.setFont("helvetica", "normal");
+
+  doc.text(`Check-in: ${safe(booking.check_in)}`, 14, y);
+  doc.text(`Check-out: ${safe(booking.check_out)}`, 80, y);
+
+  y += 12;
+
+  // =========================
+  // 🛏️ ROOMS TABLE
+  // =========================
+  doc.setFont("helvetica", "bold");
+  doc.text("Rooms", 14, y);
+
+  y += 6;
+
+  doc.setFontSize(11);
+  doc.text("Room Type", 14, y);
+  doc.text("Room No", 80, y);
+  doc.text("Price/Night", 120, y);
+
+  y += 4;
+  doc.line(14, y, 196, y);
+
+  doc.setFont("helvetica", "normal");
+
+  booking.rooms?.forEach((room: any) => {
+    y += 8;
+
+    doc.text(safe(room.room_type), 14, y);
+    doc.text(safe(room.room_number), 80, y);
+    doc.text(currencyFormat(room.price_per_night, currency), 120, y);
   });
 
-  // 🧾 Services
+  // =========================
+  // 🧾 SERVICES TABLE
+  // =========================
   if (booking.services?.length > 0) {
-    y += 10;
-    doc.text("Services:", 14, y);
+    y += 12;
 
-    booking.services.forEach((service: any, index: number) => {
-      y += 6;
-      doc.text(
-        `${index + 1}. ${service.name} x${service.quantity} (${service.calculated_price})`,
-        14,
-        y,
-      );
+    doc.setFont("helvetica", "bold");
+    doc.text("Services", 14, y);
+
+    y += 6;
+
+    doc.text("Service", 14, y);
+    doc.text("Qty", 100, y);
+    doc.text("Price", 130, y);
+
+    y += 4;
+    doc.line(14, y, 196, y);
+
+    doc.setFont("helvetica", "normal");
+
+    booking.services.forEach((service: any) => {
+      y += 8;
+
+      doc.text(safe(service.name), 14, y);
+      doc.text(safe(service.quantity), 100, y);
+      doc.text(currencyFormat(service.calculated_price, currency), 130, y);
     });
   }
 
-  // 💰 Total
-  y += 12;
-  doc.setFontSize(14);
-  doc.text(`Total: ${formatCurrency(booking.total_amount, currency)}`, 14, y);
+  // =========================
+  // 💰 TOTALS
+  // =========================
+  y += 15;
 
-  y += 10;
+  doc.line(120, y, 196, y);
+
+  y += 8;
+  doc.setFont("helvetica", "bold");
+
+  doc.text(`Tax: ${currencyFormat(booking.tax_amount, currency)}`, 120, y);
+
+  y += 8;
+
+  doc.setFontSize(14);
+  doc.text(`Total: ${currencyFormat(booking.total_amount, currency)}`, 120, y);
+
+  // =========================
+  // 🧾 FOOTER
+  // =========================
+  y += 20;
+
   doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+
   doc.text("Thank you for choosing our hotel.", 14, y);
 
-  // ⬇️ Download
+  y += 5;
+
+  doc.text("This is a system-generated invoice.", 14, y);
+
+  // =========================
+  // ⬇️ DOWNLOAD
+  // =========================
   doc.save(`invoice-${booking.reference}.pdf`);
 }

@@ -42,6 +42,7 @@ interface AuthContextType {
   loadingUser: boolean;
   bookings: any[];
   setBookings: (bookings: any[]) => void;
+  fetchUserBookings: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -131,6 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loadingUser,
         bookings,
         setBookings,
+        fetchUserBookings,
       }}
     >
       {children}

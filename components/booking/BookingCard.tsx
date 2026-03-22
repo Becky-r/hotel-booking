@@ -1,17 +1,23 @@
+import { useState } from "react";
 import { Button } from "../ui/button";
+import { UploadScreenshot } from "./UploadScreenshot";
+import { downloadInvoice } from "@/lib/booking-utils";
+import { toast } from "sonner";
 
 export function BookingCard({
   booking,
   currency,
   handleCancel,
-    isCancellable = true,
+  isCancellable = true,
+  onSuccess,
 }: {
   booking: any;
   currency: string;
   isCancellable?: boolean;
-  handleCancel?: () => void; 
-
+  handleCancel?: () => void;
+  onSuccess?: () => void;
 }) {
+  const [downloading, setDownloading] = useState(false);
   const checkIn = new Date(booking.check_in);
   const checkOut = new Date(booking.check_out);
 
@@ -23,13 +29,22 @@ export function BookingCard({
   const roomTypes = booking.rooms?.map((r: any) => r.room_type).join(", ");
 
   const services = booking.services?.map((s: any) => s.name);
-
+  const handleDownloadInvoice = () => {
+    setDownloading(true);
+    try {
+      downloadInvoice(booking, currency);
+      toast.success("Invoice downloaded.");
+    } catch (err: any) {
+      toast.error("Failed to download invoice. Try again.");
+    } finally {
+      setDownloading(false);
+    }
+  };
   const statusColors: any = {
     PENDING: "bg-yellow-100 text-yellow-700",
     CONFIRMED: "bg-green-100 text-green-700",
     CANCELLED: "bg-red-100 text-red-600",
   };
-
   return (
     <div className="rounded-lg border border-border/50 bg-card p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -65,6 +80,13 @@ export function BookingCard({
               {booking.children > 0 ? `, ${booking.children} children` : ""}
             </span>
           </div>
+          <div>
+            {booking.payment_screenshot && (
+              <span className="inline-flex items-center gap-1 text-gray-500 text-xs">
+                payment screenshot uploaded
+              </span>
+            )}
+          </div>
 
           {services?.length > 0 && (
             <div className="flex flex-wrap gap-1">
@@ -98,23 +120,34 @@ export function BookingCard({
               variant="outline"
               size="sm"
               className="text-[10px] uppercase"
+              onClick={handleDownloadInvoice}
+              disabled={downloading}
             >
-              Invoice
+              {downloading ? "Downloading..." : "Invoice"}
             </Button>
 
-            {((booking.status === "CONFIRMED" || booking.status === "PENDING") && isCancellable === true) && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-[10px] uppercase text-destructive"
-                onClick={handleCancel}
-              >
-                Cancel
-              </Button>
-            )}
+            {(booking.status === "CONFIRMED" || booking.status === "PENDING") &&
+              isCancellable === true && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-[10px] uppercase text-destructive"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </Button>
+              )}
           </div>
         </div>
       </div>
+      {booking.status === "PENDING" &&
+        !booking.payment_screenshot && ( // only show if pending and no screenshot uploaded yet
+          <UploadScreenshot
+            bookingReference={booking.reference}
+            className="mt-4"
+            onSuccess={onSuccess}
+          />
+        )}
     </div>
   );
 }

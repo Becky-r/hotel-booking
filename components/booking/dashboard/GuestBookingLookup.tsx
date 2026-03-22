@@ -13,8 +13,7 @@ export function GuestBookingLookup() {
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<any>(null);
   const [cancelling, setCancelling] = useState(false);
-  async function handleLookup(e: React.FormEvent) {
-    e.preventDefault();
+  async function fetchBooking() {
     setError("");
     setLoading(true);
 
@@ -27,6 +26,11 @@ export function GuestBookingLookup() {
       setLoading(false);
     }
   }
+
+  async function handleLookup(e: React.FormEvent) {
+    e.preventDefault();
+    await fetchBooking();
+  }
   async function handleCancel() {
     if (!booking)
       return toast.error("Add booking reference and phone number to cancel.");
@@ -36,7 +40,7 @@ export function GuestBookingLookup() {
       const response = await anonCancelBooking({ reference, phone });
       setBooking(response);
       toast.success("Booking cancelled successfully.");
-    } catch (error : any) { 
+    } catch (error: any) {
       toast.error(
         error.message || "Failed to cancel booking. Please try again.",
       );
@@ -78,7 +82,12 @@ export function GuestBookingLookup() {
       {/* RESULT */}
       {booking && (
         <div className="mt-6">
-          <BookingCard booking={booking} currency="USD" isCancellable={false} />
+          <BookingCard
+            booking={booking}
+            currency="USD"
+            isCancellable={false}
+            onSuccess={() => fetchBooking() }
+          />
 
           {/* CANCEL BUTTON */}
           <Button
