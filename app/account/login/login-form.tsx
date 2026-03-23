@@ -11,16 +11,19 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/auth-context";
 import { HOTEL_NAME } from "@/lib/constants";
 import { SplashScreen } from "@/components/layout/splash-screen";
+import { forgotPassword } from "@/lib/api";
 
 export function LoginForm() {
-  const { login, loadingUser , user } = useAuth();
+  const { login, loadingUser, user } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotSuccess, setForgotSuccess] = useState("");
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -35,6 +38,25 @@ export function LoginForm() {
       setLoading(false);
     }
   }
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Please enter your email");
+      return;
+    }
+
+    setForgotLoading(true);
+    setError("");
+    setForgotSuccess("");
+
+    try {
+      const response = await forgotPassword(email);
+      setForgotSuccess(response.detail || "Reset email sent successfully.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send reset email.");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
   useEffect(() => {
     if (!loadingUser && user) {
       router.push("/account");
@@ -69,96 +91,170 @@ export function LoginForm() {
         {/* Right - Form */}
         <div className="flex w-full flex-col justify-center p-8 lg:w-7/12 lg:p-12">
           <div className="flex flex-col gap-1">
-            <h1 className="font-serif text-2xl text-foreground">Sign In</h1>
+            <h1 className="font-serif text-2xl text-foreground">
+              {forgotMode ? "Reset Password" : "Sign In"}
+            </h1>
+
             <p className="font-sans text-sm text-muted-foreground">
-              Access your {HOTEL_NAME} guest account
+              {forgotMode
+                ? "Enter your email and we will send you a reset link"
+                : `Access your ${HOTEL_NAME} guest account`}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
-            {error && (
-              <div className="rounded-md bg-destructive/10 p-3">
-                <p className="font-sans text-sm text-destructive">{error}</p>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-1.5">
-              <Label
-                htmlFor="email"
-                className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
-              >
-                Email Address
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label
-                htmlFor="password"
-                className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
-              >
-                Password
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="bg-gold text-charcoal hover:bg-gold-dark gap-2 font-sans text-xs uppercase tracking-wider"
-            >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="size-3.5 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
-                  Signing in...
-                </span>
-              ) : (
-                <>
-                  <LogIn className="size-3.5" />
-                  Sign In
-                </>
+          {/* Forgot Password Mode */}
+          {forgotMode ? (
+            <div className="mt-8 flex flex-col gap-5">
+              {error && (
+                <div className="rounded-md bg-destructive/10 p-3">
+                  <p className="text-sm text-destructive">{error}</p>
+                </div>
               )}
-            </Button>
 
-            <p className="text-center font-sans text-sm text-muted-foreground">
-              {"Don't have an account? "}
-              <Link
-                href="/account/create"
-                className="font-medium text-gold hover:underline"
+              {forgotSuccess && (
+                <div className="rounded-md bg-green-500/10 p-3">
+                  <p className="text-sm text-green-600">{forgotSuccess}</p>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-1.5">
+                <Label className="font-sans text-xs uppercase tracking-wider text-muted-foreground">
+                  Email Address
+                </Label>
+
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <Button
+                onClick={handleForgotPassword}
+                disabled={forgotLoading}
+                className="bg-gold text-charcoal hover:bg-gold-dark"
               >
-                Create one
-              </Link>
-            </p>
-          </form>
+                {forgotLoading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="size-3.5 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
+                    Sending reset link...
+                  </span>
+                ) : (
+                  "Send Reset Link"
+                )}
+              </Button>
+
+              <p
+                onClick={() => {
+                  setForgotMode(false);
+                  setError("");
+                  setForgotSuccess("");
+                }}
+                className="cursor-pointer text-center text-sm text-muted-foreground hover:text-foreground"
+              >
+                Back to login
+              </p>
+            </div>
+          ) : (
+            /* Login Mode */
+            <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+              {error && (
+                <div className="rounded-md bg-destructive/10 p-3">
+                  <p className="font-sans text-sm text-destructive">{error}</p>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-1.5">
+                <Label
+                  htmlFor="email"
+                  className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+                >
+                  Email Address
+                </Label>
+
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label
+                  htmlFor="password"
+                  className="font-sans text-xs uppercase tracking-wider text-muted-foreground"
+                >
+                  Password
+                </Label>
+
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="pr-10"
+                  />
+
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-4" />
+                    ) : (
+                      <Eye className="size-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="bg-gold text-charcoal hover:bg-gold-dark gap-2 font-sans text-xs uppercase tracking-wider"
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <span className="size-3.5 animate-spin rounded-full border-2 border-charcoal/30 border-t-charcoal" />
+                    Signing in...
+                  </span>
+                ) : (
+                  <>
+                    <LogIn className="size-3.5" />
+                    Sign In
+                  </>
+                )}
+              </Button>
+
+              <p
+                onClick={() => {
+                  setForgotMode(true);
+                  setError("");
+                }}
+                className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+              >
+                Forgot your password?
+              </p>
+
+              <p className="text-center font-sans text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <Link
+                  href="/account/create"
+                  className="font-medium text-gold hover:underline"
+                >
+                  Create one
+                </Link>
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </main>
