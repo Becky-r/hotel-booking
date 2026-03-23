@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useBooking } from "@/contexts/booking-context";
 import { useSite } from "@/contexts/site-context";
-import { availableRooms as fetchAvailableRooms } from "@/lib/api";
+import {
+  availableRooms as fetchAvailableRooms,
+  validateBooking,
+} from "@/lib/api";
 import SearchForm from "@/components/booking/SearchForm";
 import RoomResultsList from "@/components/booking/RoomResultsList";
+import { toast } from "sonner";
 
 export function BookingSearch() {
   const {
@@ -27,10 +31,8 @@ export function BookingSearch() {
   const [searched, setSearched] = useState(false);
   const [roomsData, setRoomsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-
   const hasDate = booking.checkIn && booking.checkOut;
 
-  // 🔍 SEARCH API CALL
   const handleSearch = async () => {
     if (!booking.checkIn || !booking.checkOut) return;
     if (booking.checkOut <= booking.checkIn) return;
@@ -50,6 +52,22 @@ export function BookingSearch() {
       console.error("Error fetching rooms:", err);
     } finally {
       setLoading(false);
+    }
+  };
+  const checkValidity = async () => {
+    try {
+      const response = await validateBooking({
+        check_in: format(booking.checkIn!, "yyyy-MM-dd"),
+        check_out: format(booking.checkOut!, "yyyy-MM-dd"),
+        adults: booking.adults,
+        children: booking.children,
+        rooms: rooms,
+      });
+      if (!response.valid && response.capacity_error) {
+        toast.error(response.capacity_error);
+      }
+    } catch (err) {
+      console.error("Booking validation failed:", err);
     }
   };
   const totalRooms = rooms.reduce((sum, r) => sum + r.quantity, 0);
@@ -79,6 +97,23 @@ export function BookingSearch() {
 
     return sum + Number(room.price) * selectedRoom.quantity * nights;
   }, 0);
+
+  useEffect(() => {
+
+    if (!booking.checkIn || !booking.checkOut || !booking.adults   || rooms.length === 0) return;
+
+    const timer = setTimeout(() => {
+      checkValidity();
+    }, 800); // delay in ms
+
+    return () => clearTimeout(timer);
+  }, [
+    booking.checkIn,
+    booking.checkOut,
+    booking.adults,
+    booking.children,
+    rooms,
+  ]);
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
