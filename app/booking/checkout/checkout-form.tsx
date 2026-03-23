@@ -90,12 +90,11 @@ export function CheckoutForm() {
       };
       console.log("Booking payload:", payload);
       const response = await createBooking(payload);
-      setBooking(response);
       router.push("/booking/confirmation");
       toast.success("Booking successful!");
+      setBooking(response);
     } catch (err: any) {
-      toast.error(err.message
-         || "Booking failed. Try again.");
+      toast.error(err.message || "Booking failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -121,7 +120,7 @@ export function CheckoutForm() {
     }, 0);
   }, [services, booking.services]);
   const finalTotal = totalPrice + servicesTotal;
-  const tax = finalTotal * 0.15; 
+  const tax = finalTotal * 0.15;
   return (
     <>
       {/* HEADER */}
@@ -144,7 +143,7 @@ export function CheckoutForm() {
             <div className="border rounded-lg p-6">
               <h2 className="text-xl font-bold">Guest Details</h2>
               <p className="text-sm text-muted-foreground mt-1">
-              * Required fields
+                * Required fields
               </p>
               <div className="grid gap-4 mt-4 sm:grid-cols-2">
                 <Input

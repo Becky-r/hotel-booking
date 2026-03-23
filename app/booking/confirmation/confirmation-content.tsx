@@ -27,24 +27,23 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { downloadInvoice } from "@/lib/booking-utils";
+import { SplashScreen } from "@/components/layout/splash-screen";
+import { useAuth } from "@/contexts/auth-context";
 export function ConfirmationContent() {
   const { booking, resetBooking } = useBooking();
   const { currency } = useSite();
-
-  const [timeLeft, setTimeLeft] = useState(0);
-
-  // inside component
+  const { fetchUserBookings } = useAuth()
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const router = useRouter();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
-
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
     setError(null);
@@ -61,6 +60,7 @@ export function ConfirmationContent() {
       formData.append("payment_screenshot", file);
       await uploadPaymentScreenshot(booking.reference, formData);
       toast.success(" Successfully uploaded payment screenshot.");
+      fetchUserBookings();
       router.push("/account");
       resetBooking();
       setSuccess(true);
@@ -70,15 +70,21 @@ export function ConfirmationContent() {
       setUploading(false);
     }
   };
-  // ⏱️ Countdown logic (15 minutes)
+  // Countdown
   useEffect(() => {
     if (!booking?.created_at) return;
+
     const expiry = new Date(booking.created_at).getTime() + 15 * 60 * 1000;
-    const interval = setInterval(() => {
+
+    const updateTime = () => {
       const now = Date.now();
       const diff = Math.max(0, Math.floor((expiry - now) / 1000));
       setTimeLeft(diff);
-    }, 1000);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
     return () => clearInterval(interval);
   }, [booking?.created_at]);
 
@@ -95,6 +101,11 @@ export function ConfirmationContent() {
   };
 
   const isExpired = timeLeft === 0;
+
+  if (timeLeft === null) {
+    return <SplashScreen />;
+  }
+
   return (
     <section className="bg-background py-16 lg:py-24">
       <div className="mx-auto max-w-2xl px-4 lg:px-6">
