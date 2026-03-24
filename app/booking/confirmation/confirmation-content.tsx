@@ -27,12 +27,11 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { downloadInvoice } from "@/lib/booking-utils";
-import { SplashScreen } from "@/components/layout/splash-screen";
 import { useAuth } from "@/contexts/auth-context";
 export function ConfirmationContent() {
   const { booking, resetBooking } = useBooking();
   const { currency } = useSite();
-  const { fetchUserBookings } = useAuth()
+  const { fetchUserBookings } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -40,6 +39,7 @@ export function ConfirmationContent() {
   const [success, setSuccess] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [noBooking, setNoBooking] = useState(false);
   const router = useRouter();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -72,7 +72,7 @@ export function ConfirmationContent() {
   };
   // Countdown
   useEffect(() => {
-    if (!booking?.created_at) return;
+    if (!booking?.created_at) {setNoBooking(true); return;}
 
     const expiry = new Date(booking.created_at).getTime() + 15 * 60 * 1000;
 
@@ -102,16 +102,42 @@ export function ConfirmationContent() {
 
   const isExpired = timeLeft === 0;
 
-  if (timeLeft === null) {
-    return <SplashScreen />;
-  }
+  if (noBooking || timeLeft === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[70vh] gap-6 text-center px-4">
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold">
+            Booking Details Not Available
+          </h2>
 
+          <p className="text-sm text-muted-foreground max-w-md">
+            If you refreshed this page or accessed it directly, your booking
+            details may no longer be stored in the current session. You can find
+            your reservation from your account using your booking reference and
+            email address.
+          </p>
+        </div>
+
+        <div className="flex gap-3 flex-col sm:flex-row">
+          <Link href="/account">
+            <Button className="w-full sm:w-auto">Your Bookings</Button>
+          </Link>
+
+          <Link href="/booking">
+            <Button variant="outline" className="w-full sm:w-auto">
+              Make New Booking
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <section className="bg-background py-16 lg:py-24">
       <div className="mx-auto max-w-2xl px-4 lg:px-6">
         {/* 🔴 EXPIRED STATE */}
         {isExpired ? (
-          <div className="max-w-md mx-auto rounded-xl bg-red-10 border p-8 shadow-md text-center space-y-6">
+          <div className="max-w-md mx-auto rounded-xl border bg-card p-8 shadow-sm text-center space-y-6">
             {/* Icon */}
             <div className="flex justify-center">
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
@@ -120,44 +146,59 @@ export function ConfirmationContent() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-3xl font-bold text-gold">
-              Booking Not Completed
-            </h1>
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold">
+                Booking Payment Time Expired
+              </h1>
+
+              <p className="text-sm text-muted-foreground">
+                Your reservation is currently inactive because the payment time
+                window has expired.
+              </p>
+            </div>
 
             {/* Description */}
-            <p className=" text-base leading-relaxed">
-              This booking is no longer active or the payment time has passed.
-              You can still find your booking and upload your payment from your
-              account page.
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Don’t worry — your booking details are still in our system. You
+              can access your reservation from your account and complete the
+              payment or create a new booking at any time.
             </p>
 
-            {/* Instructions */}
-            <div className="bg-red-100 rounded-lg p-4 text-sm text-red-800">
-              <p className="mb-1">
-                Use your{" "}
-                <span className="font-semibold">booking reference</span> and
-                phone number.
+            {/* Info Box */}
+            <div className="rounded-lg bg-muted p-4 text-sm text-muted-foreground space-y-1">
+              <p>
+                Access your booking using your{" "}
+                <span className="font-semibold text-foreground">
+                  booking reference
+                </span>{" "}
+                and{" "}
+                <span className="font-semibold text-foreground">
+                  email address
+                </span>
+                .
               </p>
-              <p>The reference was sent to your email during booking.</p>
+              <p>
+                The booking reference was sent to your email during reservation.
+              </p>
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-4">
-              <Link href="/account">
-                <Button className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold">
-                  Go to My Bookings
-                </Button>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+              <Link href="/account" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto">Go to My Bookings</Button>
               </Link>
 
-              <Link href="/booking/">
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto font-semibold"
-                >
+              <Link href="/booking/" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto">
                   Make New Booking
                 </Button>
               </Link>
             </div>
+
+            {/* Footer Note */}
+            <p className="text-xs text-muted-foreground pt-2">
+              If you need assistance, please contact our support team.
+            </p>
           </div>
         ) : (
           <>

@@ -140,8 +140,8 @@ export async function validateBooking(data: any) {
   return apiRequest<any>("POST", "/booking/validate-booking/", data);
 }
 
-export async function getBookingDetails(reference: string) {
-  return apiRequest<any>("GET", `/booking/${reference}/detail/`);
+export async function getBookingDetails(reference: string , email: string) {
+  return apiRequest<any>("GET", `/booking/${reference}/detail/?email=${email}`);
 }
 
 export async function getUserBookings() {

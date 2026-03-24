@@ -18,7 +18,7 @@ export function GuestBookingLookup() {
     setLoading(true);
 
     try {
-      const response = await getBookingDetails(reference);
+      const response = await getBookingDetails(reference,email);
       setBooking(response);
     } catch {
       setError("Booking not found. Please check your details.");
