@@ -8,7 +8,7 @@ import { set } from "date-fns";
 
 export function GuestBookingLookup() {
   const [reference, setReference] = useState("");
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<any>(null);
@@ -34,10 +34,10 @@ export function GuestBookingLookup() {
   async function handleCancel() {
     if (!booking)
       return toast.error("Add booking reference and phone number to cancel.");
-    if (!phone) return toast.error("Please enter your phone number to cancel.");
+    if (!email) return toast.error("Please enter your email to cancel.");
     setCancelling(true);
     try {
-      const response = await anonCancelBooking({ reference, phone });
+      const response = await anonCancelBooking({ reference, email });
       setBooking(response);
       toast.success("Booking cancelled successfully.");
     } catch (error: any) {
@@ -63,10 +63,10 @@ export function GuestBookingLookup() {
         />
 
         <Input
-          type="tel"
-          placeholder="Phone used for booking"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          type="email"
+          placeholder="Email used for booking"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
 

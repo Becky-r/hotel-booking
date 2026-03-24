@@ -117,7 +117,7 @@ export function BookingSearch() {
   return (
     <section className="bg-background py-10 lg:py-14">
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
-        {/* 🔍 SEARCH BAR */}
+        {/*  SEARCH BAR */}
         <SearchForm
           booking={booking}
           setCheckIn={setCheckIn}

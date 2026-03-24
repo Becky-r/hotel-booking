@@ -49,23 +49,51 @@ export function CheckoutForm() {
       </section>
     );
   }
+  const validateCheckoutForm = () => {
+    if (!formData.firstName || !formData.lastName) {
+      toast.error("Name is required");
+      return false;
+    }
 
-  const handleSubmit = async () => {
-    if (!formData.firstName || !formData.lastName || !formData.phone) {
-      toast.error("Please fill required fields");
-      return;
+    if (!formData.email) {
+      toast.error("Email is required");
+      return false;
+    }
+
+    if (!formData.phone) {
+      toast.error("Phone is required");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Enter a valid email address");
+      return false;
+    }
+
+    // Ethiopian phone must start with +251
+    const ethiopianPhoneRegex = /^\+251[79]\d{8}$/;
+
+    if (!ethiopianPhoneRegex.test(formData.phone)) {
+      toast.error("Phone must be in +2519XXXXXXXX format");
+      return false;
     }
 
     if (!agreed) {
       toast.error("Accept terms first");
-      return;
+      return false;
     }
 
     if (!booking.checkIn || !booking.checkOut) {
       toast.error("Missing dates");
-      return;
+      return false;
     }
 
+    return true;
+  };
+  const handleSubmit = async () => {
+    if (!validateCheckoutForm()) return;
     setLoading(true);
 
     try {
@@ -88,7 +116,6 @@ export function CheckoutForm() {
         tin_number: formData.tin_number || "",
         package_user_amount: formData.package_user_amount || "",
       };
-      console.log("Booking payload:", payload);
       const response = await createBooking(payload);
       router.push("/booking/confirmation");
       toast.success("Booking successful!");
@@ -162,18 +189,29 @@ export function CheckoutForm() {
                 />
                 <Input
                   type="email"
-                  placeholder="Email "
+                  placeholder="Email *"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
                 />
                 <Input
-                  placeholder="Phone *"
+                  placeholder="+2519XXXXXXXX"
                   value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
+                  onChange={(e) => {
+                    let value = e.target.value;
+
+                    if (!value.startsWith("+251")) {
+                      value = "+251";
+                    }
+
+                    const numbers = value.replace(/\D/g, "").slice(3, 12);
+
+                    setFormData({
+                      ...formData,
+                      phone: "+251" + numbers,
+                    });
+                  }}
                 />
               </div>
             </div>

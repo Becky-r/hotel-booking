@@ -20,7 +20,7 @@ export default function BookingSummaryBar({ totalRooms, totalTypes, totalBooking
         {totalRooms} room{totalRooms > 1 && "s"} across {totalTypes} type
         {totalTypes > 1 && "s"}
         <p className="text-sm text-muted-foreground">
-        {nights > 0 && ` for ${nights} night${nights > 1 && "s"}`}
+        {nights > 0 && "per night"} {nights} night{nights > 1 && "s"}
       </p>
         {totalBookingPrice !== undefined && (
         <p className="text-lg font-bold">

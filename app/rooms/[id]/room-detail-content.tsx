@@ -225,14 +225,14 @@ export function RoomDetailContent({ data }: RoomDetailContentProps) {
       </section>
 
       {/* Related Rooms */}
-      <section className="border-t border-border/50 bg-secondary/30 py-16">
+      {/* <section className="border-t border-border/50 bg-secondary/30 py-16">
         <div className="mx-auto max-w-7xl px-4 lg:px-6">
           <SectionHeading subtitle="Explore" title="Other Rooms You May Like" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {relatedRooms.map((r) => (
               <Link
                 key={r.id}
-                href={`/rooms/${r.id}`}
+                href={`/rooms/`}
                 className="group overflow-hidden rounded-lg bg-card transition-shadow hover:shadow-lg"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -255,7 +255,7 @@ export function RoomDetailContent({ data }: RoomDetailContentProps) {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 }

@@ -25,7 +25,7 @@ export function FeaturedRooms() {
           {featured.slice(0, 4).map((room) => (
             <Link
               key={room.id}
-              href={`/rooms/${room.slug}`}
+              href={`/rooms/`}
               className="group relative overflow-hidden rounded-lg bg-card"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
