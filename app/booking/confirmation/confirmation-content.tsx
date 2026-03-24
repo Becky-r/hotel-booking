@@ -39,7 +39,6 @@ export function ConfirmationContent() {
   const [success, setSuccess] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [noBooking, setNoBooking] = useState(false);
   const router = useRouter();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -72,7 +71,7 @@ export function ConfirmationContent() {
   };
   // Countdown
   useEffect(() => {
-    if (!booking?.created_at) {setNoBooking(true); return;}
+    if (!booking?.created_at) return;
 
     const expiry = new Date(booking.created_at).getTime() + 15 * 60 * 1000;
 
@@ -102,7 +101,7 @@ export function ConfirmationContent() {
 
   const isExpired = timeLeft === 0;
 
-  if (noBooking || timeLeft === null) {
+  if (timeLeft === null) {
     return (
       <div className="flex flex-col items-center justify-center h-[70vh] gap-6 text-center px-4">
         <div className="space-y-2">
