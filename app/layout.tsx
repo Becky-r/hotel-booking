@@ -16,16 +16,16 @@ const _playfair = Playfair_Display({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    default: "The Kerawi | Luxury 3-Star Hotel in Hawassa Ethiopia",
-    template: "%s | The Kerawi",
+    default: "The Kerawi International Hotel | Luxury 3-Star Hotel in Hawassa Ethiopia",
+    template: "%s | The Kerawi International Hotel",
   },
   description:
-    "Experience unparalleled luxury at The Kerawi, a 3-star hotel in the heart of Hawassa Ethiopia. Exquisite rooms, world-class dining, and bespoke services await.",
+    "Experience unparalleled luxury at The Kerawi International Hotel, a 3-star hotel in the heart of Hawassa Ethiopia. Exquisite rooms, world-class dining, and bespoke services await.",
   keywords: [
     "luxury hotel",
     "Hawassa Ethiopia hotel",
     "3-star hotel",
-    "The Kerawi",
+    "The Kerawi International Hotel",
     "boutique hotel ",
     "luxury accommodation",
   ],

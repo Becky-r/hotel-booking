@@ -5,7 +5,7 @@ import { RoomsListing } from "./rooms-listing"
 export const metadata: Metadata = {
   title: "Rooms & Suites",
   description:
-    "Discover our collection of luxurious rooms and suites at The Aurelian, each designed to offer an exceptional experience of comfort and elegance.",
+    "Discover our collection of luxurious rooms and suites at The Kerawi International Hotel, each designed to offer an exceptional experience of comfort and elegance.",
 }
 
 export default function RoomsPage() {

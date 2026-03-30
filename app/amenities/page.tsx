@@ -5,8 +5,8 @@ import { amenities } from "@/lib/data/amenities"
 import { SectionHeading } from "@/components/shared/section-heading"
 
 export const metadata: Metadata = {
-  title: "Amenities & Services | The Aurelian",
-  description: "Discover world-class amenities and services at The Aurelian, from our signature spa to fine dining.",
+  title: "Amenities & Services | The Kerawi International Hotel",
+  description: "Discover world-class amenities and services at The Kerawi International Hotel, from our signature spa to fine dining.",
 }
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -28,7 +28,7 @@ export default function AmenitiesPage() {
         <Image
 
 
-          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9768.JPG?updatedAt=1772727037957"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0247.JPG?updatedAt=1772726823908"
           alt="Kerawi Services"
 
           fill

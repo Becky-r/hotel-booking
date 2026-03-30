@@ -106,8 +106,8 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 text-xs text-primary-foreground/40 sm:flex-row">
           <p>
-            &copy; {new Date().getFullYear()} {HOTEL_NAME}. All rights reserved.
-          </p>
+  &copy; {new Date().getFullYear()} Sabih Software Design Company. All rights reserved.
+</p>
           <div className="flex items-center gap-4">
             <Link href="/policies" className="transition-colors hover:text-gold">
               Privacy Policy

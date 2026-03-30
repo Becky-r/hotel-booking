@@ -5,10 +5,14 @@ import { HOTEL_NAME, HOTEL_TAGLINE } from "@/lib/constants"
 import { SearchWidget } from "@/components/booking/search-widget"
 import { Star } from "lucide-react"
 
+
+
 export function HeroSection() {
+  
   return (
     <section className="relative flex min-h-[99vh] items-center justify-center overflow-hidden">
       {/* Background Image */}
+     
       <Image
         src="https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8087.JPG?updatedAt=1772962015224"
        
@@ -28,12 +32,17 @@ export function HeroSection() {
             <Star key={i} className="size-4 fill-gold text-gold" />
           ))}
         </div>
+<div className="flex items-center">
+  <img
+    src="https://ik.imagekit.io/hawassa/hotel-booking/public/logo%20kerawi.png"
+    alt="Hotel Logo"
+    className="h-10 w-10 md:h-60 md:w-60 object-contain mr-1"
+  />
 
-        {/* Hotel Name */}
-        <h1 className="font-serif text-5xl font-bold leading-tight tracking-wide text-white md:text-7xl lg:text-8xl text-balance">
-          {HOTEL_NAME}
-        </h1>
-
+  <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-white md:text-7xl lg:text-8xl">
+    {HOTEL_NAME}
+  </h1>
+</div>
         {/* Tagline */}
         <p className="max-w-xl font-sans text-lg leading-relaxed text-white/80 md:text-xl text-pretty">
           {HOTEL_TAGLINE}

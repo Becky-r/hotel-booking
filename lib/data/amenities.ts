@@ -62,7 +62,7 @@ export const amenities: Amenity[] = [
     description:
       "Begin your experience from the moment you land. Our fleet of luxury vehicles and professional chauffeurs provide seamless airport transfers, city tours, and private transportation throughout your stay.",
     icon: "Car",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/download-image-bulk/photo-1549317661-bd32c8ce0afa_w800.jpg",
+    image: "https://b772872.smushcdn.com/772872/wp-content/uploads/2024/05/Addis-Ababa-Airport-Taxi-Minivan-1.jpeg?lossy=1&strip=1&webp=1",
     category: "services",
   },
 ]

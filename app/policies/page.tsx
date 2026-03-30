@@ -5,8 +5,8 @@ import { Separator } from "@/components/ui/separator"
 import { HOTEL_NAME, HOTEL_PHONE, HOTEL_EMAIL, HOTEL_CHECK_IN_TIME, HOTEL_CHECK_OUT_TIME } from "@/lib/constants"
 
 export const metadata: Metadata = {
-  title: "Policies | The Aurelian",
-  description: "Review our cancellation, privacy, and terms of service policies at The Aurelian.",
+  title: "Policies | The Kerawi International Hotel",
+  description: "Review our cancellation, privacy, and terms of service policies at The Kerawi International Hotel.",
 }
 
 const policies = [

@@ -19,7 +19,7 @@ export default function OffersPage() {
       {/* Hero Banner */}
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-charcoal md:h-80">
         <Image
-          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0313.JPG?updatedAt=1772726824807"
+          src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0244.JPG?updatedAt=1772726825189"
           alt="Special offers"
           fill
           className="object-cover opacity-40"

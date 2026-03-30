@@ -3,7 +3,7 @@ import { CheckoutForm } from "./checkout-form"
 
 export const metadata: Metadata = {
   title: "Checkout",
-  description: "Complete your booking at The Aurelian.",
+  description: "Complete your booking at The Kerawi International Hotel.",
 }
 
 export default function CheckoutPage() {

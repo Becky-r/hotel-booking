@@ -3,7 +3,7 @@ import { BookingSearch } from "./booking-search"
 
 export const metadata: Metadata = {
   title: "Book Your Stay",
-  description: "Search available rooms and book your luxury stay at The Aurelian.",
+  description: "Search available rooms and book your luxury stay at The Kerawi International Hotel.",
 }
 
 export default function BookingPage() {

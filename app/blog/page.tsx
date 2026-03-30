@@ -7,8 +7,8 @@ import { SectionHeading } from "@/components/shared/section-heading"
 import { blogPosts } from "@/lib/data/blog-posts"
 
 export const metadata: Metadata = {
-  title: "Journal | The Aurelian",
-  description: "Stories, travel tips, and insights from The Aurelian. Discover Paris and luxury living.",
+  title: "Journal | The Kerawi International Hotel",
+  description: "Stories, travel tips, and insights from The Kerawi International Hotel. Discover Paris and luxury living.",
 }
 
 export default function BlogPage() {
