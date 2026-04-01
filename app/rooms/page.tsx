@@ -14,7 +14,7 @@ export default function RoomsPage() {
       {/* Hero */}
      
 
-      <section className="relative flex items-center justify-center bg-foreground py-20 lg:py-60">
+      <section className="relative flex items-center justify-center bg-foreground py-20 lg:py-20">
          <Image
           src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9756.JPG?updatedAt=1772727041026"
           alt="Luxury hotel room view"

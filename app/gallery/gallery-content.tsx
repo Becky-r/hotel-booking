@@ -19,6 +19,11 @@ const galleryImages = [
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8077.JPG", alt: "Hotel Entrance", category: "Exterior" },
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8086.JPG", alt: "Luxury hotel exterior view", category: "Exterior" },
   {src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8108.JPG", alt: "Modern hotel building front view", category: "Exterior" },
+  { 
+  src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8078.JPG?updatedAt=1772962015844", 
+  alt: "Hotel exterior panoramic view", 
+  category: "Exterior" 
+},
 
   
   { src: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9791.JPG?updatedAt=1772686421975", alt: "Executive Suite", category: "Rooms" },

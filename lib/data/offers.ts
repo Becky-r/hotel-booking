@@ -93,7 +93,7 @@ export const offers: Offer[] = [
     discount: "15% Off Weekends",
     promoCode: "WELCOME10",
     validUntil: "2026-12-31",
-    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5X9A8092.JPG",
+    image: "https://ik.imagekit.io/hawassa/hotel-booking/public/file.jpg?updatedAt=1772867701715",
     terms: [
       "Valid for Friday-Sunday stays only",
       "Includes Saturday brunch",
