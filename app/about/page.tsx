@@ -5,8 +5,8 @@ import { SectionHeading } from "@/components/shared/section-heading"
 import { HOTEL_NAME, HOTEL_STAR_RATING } from "@/lib/constants"
 
 export const metadata: Metadata = {
-  title: "About Us | The Kerawi",
-  description: "Learn about the rich heritage and unwavering commitment to excellence at The Aurelian.",
+  title: "About Us | The Kerawi International Hotel",
+  description: "Learn about the rich heritage and unwavering commitment to excellence at The Kerawi International Hotel .",
 }
 
 const values = [
@@ -79,9 +79,7 @@ export default function AboutPage() {
             <div className="flex w-full flex-col gap-6 lg:w-7/12">
               <SectionHeading title={`Welcome to ${HOTEL_NAME}`} subtitle="Our Heritage" align="left" />
               <p className="font-sans text-base leading-relaxed text-muted-foreground">
-                For nearly a century, {HOTEL_NAME} has stood as a beacon of refined luxury in the heart of Paris.
-                What began as the private residence of a visionary architect has evolved into one of Europe{"'"}s most
-                celebrated five-star hotels, a place where history, art, and unparalleled service converge.
+                For nearly a century, {HOTEL_NAME} Hawassa is a 3 star hotel it was established on October 1, 2019 it’s located at an easy reach for travelers around an area known by Atote next to Zion College. The hotel is a one minute drive from down town and 3km from Hawassa Lake and 2km from mount Tabor. The hotel has make ready to its beloved customer 45 diverse types of guest rooms, 2 Conference and Event venues and 3 food & beverage service outlets.
               </p>
               <p className="font-sans text-base leading-relaxed text-muted-foreground">
                 Every corner of our hotel tells a story. Original Art Deco motifs blend seamlessly with contemporary
@@ -90,10 +88,9 @@ export default function AboutPage() {
                 merely accommodated, but truly celebrated.
               </p>
               <p className="font-sans text-base leading-relaxed text-muted-foreground">
-                Today, under the stewardship of the Laurent family{"'"}s third generation, {HOTEL_NAME} continues to
-                set the standard for what luxury hospitality can be. Our {HOTEL_STAR_RATING}-star palace designation
-                is not just an accolade; it is a promise renewed with every guest who walks through our doors.
+               From the most upper floors of the hotel, guests can easily enjoy the beauty of mount Tabor and Hawassa Lake from their rooms. The kerawi guest rooms are furnished with high quality furniture and fixtures, High speed WI-FI internet and a DSTV channel. Moreover for the sake of our guest’s safety and security, a smoke detector and CCTV are fixed at the hotel premises where they are demanded.  
               </p>
+              
             </div>
           </div>
         </div>

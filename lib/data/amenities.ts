@@ -28,7 +28,7 @@ export const amenities: Amenity[] = [
     name: "Le Doré Restaurant",
     shortDescription: "Fine dining that celebrates seasonal, local ingredients.",
     description:
-      "Under the direction of our Michelin-starred chef, Le Doré offers an exquisite culinary journey. The menu changes with the seasons, showcasing the finest local and imported ingredients. An extensive wine cellar with over 500 labels complements every dish.",
+      "At Kerawi, there are three food & beverage outlets, where guests enjoy both traditional and national dishes with utmost hospitality by our service staff. Our green garden is suitable for chatting with friends while enjoying our freshly prepared juices and both alcoholic & non alcoholic beverages.",
     icon: "UtensilsCrossed",
     image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9874.JPG?updatedAt=1772727136240",
 
@@ -39,7 +39,8 @@ export const amenities: Amenity[] = [
     name: "The Gold Bar",
     shortDescription: "Craft cocktails in an atmosphere of refined elegance.",
     description:
-      "Step into The Gold Bar, where master mixologists craft bespoke cocktails using rare spirits and artisanal ingredients. The intimate Art Deco setting with live jazz creates an unforgettable evening experience. Enjoy our signature collection or let our team create something uniquely yours.",
+      "At our entire food & beverage service outlet we offer you an a la carte menu traditional and European dish with a selection of beverage and freshly brewed juices. bar furnished with sofa and high quality table & chairs",
+      
     icon: "Wine",
     image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A0210.JPG?updatedAt=1772726822577",
     category: "dining",
@@ -48,8 +49,18 @@ export const amenities: Amenity[] = [
     id: "business",
     name: "Business Center",
     shortDescription: "Fully equipped meeting and conference facilities.",
-    description:
-      "Three elegantly appointed meeting rooms with the latest audiovisual technology, high-speed internet, and secretarial services. Whether hosting an intimate board meeting or a grand reception, our events team ensures flawless execution.",
+   description: `
+The conference rooms seat between 80 to 100 persons. At the hotel, conference and event delegates can avail of free car parking with maximum security.
+
+Conference & Event Facilities Include:
+• Screens in all conference and event venues  
+• LCD projector  
+• Flip chart  
+• Whiteboard  
+• Pens & pads  
+• Bottled water  
+• Wi-Fi  
+`,
     icon: "Briefcase",
 
     image: "https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9697.JPG?updatedAt=1772726961292",
