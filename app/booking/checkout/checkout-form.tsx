@@ -12,7 +12,12 @@ import { Separator } from "@/components/ui/separator";
 
 import { useBooking } from "@/contexts/booking-context";
 import { formatCurrency, formatDate } from "@/lib/format";
-import { apiRequest, createBooking, getServices } from "@/lib/api";
+import {
+  apiRequest,
+  createBooking,
+  getServices,
+  validateBooking,
+} from "@/lib/api";
 import { toast } from "sonner";
 import { ServiceCard } from "@/components/booking/ServiceCard";
 import { useSite } from "@/contexts/site-context";
@@ -23,7 +28,7 @@ export function CheckoutForm() {
   const { currency } = useSite();
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [finalTotal, setFinalTotal] = useState(0);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,8 +37,33 @@ export function CheckoutForm() {
     company: "",
     tin_number: "",
     package_user_amount: "",
+    promo_code: "",
   });
-
+  const checkPromoCode = async () => {
+    if (formData.promo_code.trim() === "") {
+      toast.error("Please enter a promo code");
+      return;
+    }
+    try {
+      const response = await validateBooking({
+        check_in: format(booking.checkIn!, "yyyy-MM-dd"),
+        check_out: format(booking.checkOut!, "yyyy-MM-dd"),
+        adults: booking.adults,
+        children: booking.children,
+        rooms: rooms,
+        services: booking.services,
+        guest_email: formData.email,
+        guest_phone: formData.phone,
+        promo_code: formData.promo_code,
+      });
+      if (response.valid) {
+        setFinalTotal(response.total_amount) // total amount after discount
+        toast.success(" Promo code applied! Confirm your booking now.");
+      }
+    } catch (err) {
+      toast.error(err.message || "Booking validation failed");
+    }
+  };
   const hasRooms = booking.rooms.length > 0;
 
   if (!hasRooms) {
@@ -51,7 +81,7 @@ export function CheckoutForm() {
   }
   const validateCheckoutForm = () => {
     if (!formData.firstName || !formData.lastName) {
-      toast.error("Name is required");
+      toast.error("First and last name are required");
       return false;
     }
 
@@ -115,6 +145,7 @@ export function CheckoutForm() {
         company: formData.company || "",
         tin_number: formData.tin_number || "",
         package_user_amount: formData.package_user_amount || "",
+        promo_code: formData.promo_code || "",
       };
       const response = await createBooking(payload);
       router.push("/booking/confirmation");
@@ -146,8 +177,14 @@ export function CheckoutForm() {
       return sum;
     }, 0);
   }, [services, booking.services]);
-  const finalTotal = totalPrice + servicesTotal;
-  const tax = finalTotal * 0.15;
+  const taxableAmount = totalPrice + servicesTotal;
+  const tax = taxableAmount * 0.15;
+
+  useEffect(()=> {
+    setFinalTotal(taxableAmount + tax);
+  }, [totalPrice, servicesTotal])
+
+
   return (
     <>
       {/* HEADER */}
@@ -317,6 +354,27 @@ export function CheckoutForm() {
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
                     <span>{formatCurrency(finalTotal, currency)}</span>
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <span>Have a Promo Code ?</span>
+                  <div>
+                    <Input
+                      type="text"
+                      value={formData.promo_code}
+                      onChange={(e) =>
+                        setFormData({ ...formData, promo_code: e.target.value })
+                      }
+                      placeholder="Enter code"
+                    />
+                    <Button
+                      className="my-4"
+                      onClick={checkPromoCode}
+                      variant="outline"
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
                 <Separator />
