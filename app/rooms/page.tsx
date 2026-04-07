@@ -5,7 +5,7 @@ import { RoomsListing } from "./rooms-listing"
 export const metadata: Metadata = {
   title: "Rooms & Suites",
   description:
-    "Discover our collection of luxurious rooms and suites at The Aurelian, each designed to offer an exceptional experience of comfort and elegance.",
+    "Discover our collection of luxurious rooms and suites at The Kerawi International Hotel, each designed to offer an exceptional experience of comfort and elegance.",
 }
 
 export default function RoomsPage() {
@@ -14,7 +14,7 @@ export default function RoomsPage() {
       {/* Hero */}
      
 
-      <section className="relative flex items-center justify-center bg-foreground py-20 lg:py-60">
+      <section className="relative flex items-center justify-center bg-foreground py-20 lg:py-20">
          <Image
           src="https://ik.imagekit.io/hawassa/hotel-booking/public/5N5A9756.JPG?updatedAt=1772727041026"
           alt="Luxury hotel room view"

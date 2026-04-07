@@ -1,13 +1,13 @@
 export const HOTEL_NAME = "Kerawi International Hotel"
-export const HOTEL_TAGLINE = "Where Timeless Elegance Meets Modern Luxury"
+export const HOTEL_TAGLINE = "where you get utmost hospitality in the town!"
 export const HOTEL_DESCRIPTION =
   "Nestled in the heart of the city, The Kerawi offers an unparalleled three-star experience. Every detail has been meticulously crafted to ensure your stay is nothing short of extraordinary."
 export const HOTEL_ADDRESS = " Roughly 2.2 miles (approx. 39-minute drive) from Hawassa Airport."
-export const HOTEL_PHONE = "+251 462-124-776, +251 955-45-60-60"
+export const HOTEL_PHONE = "+251 462-124-776,+251 955-45-60-60"
 export const HOTEL_EMAIL = "Kerawihotel@gmail.com"
 export const HOTEL_STAR_RATING = 3
-export const HOTEL_CHECK_IN_TIME = "15:00"
-export const HOTEL_CHECK_OUT_TIME = "11:00"
+export const HOTEL_CHECK_IN_TIME = "01:00 pm"
+export const HOTEL_CHECK_OUT_TIME = "11:00 am"
 
 export const TAX_RATE = 0.15
 export const SERVICE_CHARGE_RATE = 0.05
