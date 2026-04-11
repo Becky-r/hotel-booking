@@ -304,7 +304,7 @@ export function CheckoutForm() {
                 checked={agreed}
                 onCheckedChange={(v) => setAgreed(v === true)}
               />
-              <span className="text-sm">I agree to terms & conditions</span>
+              <span className="text-sm"> I have read and agree to the <a href="/policies" target="_blank" className="text-gold underline">terms & conditions</a></span>
             </div>
 
             <Button
